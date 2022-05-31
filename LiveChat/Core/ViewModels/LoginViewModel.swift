@@ -5,11 +5,13 @@
 //  Created by Богдан Зыков on 31.05.2022.
 //
 
-import Foundation
+import SwiftUI
+
 
 
 class LoginViewModel: ObservableObject{
     @Published var email: String = ""
+    @Published var userAvatar: UIImage?
     @Published var pass: String = ""
     @Published var errorMessage = ""
     @Published var showAlert: Bool = false

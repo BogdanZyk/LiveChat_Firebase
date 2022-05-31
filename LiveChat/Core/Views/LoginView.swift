@@ -9,6 +9,7 @@ import SwiftUI
 
 struct LoginView: View {
     @State private var isLogin: Bool = false
+    @State private var showImagePicker: Bool = false
     @StateObject private var loginVM = LoginViewModel()
     var body: some View {
         NavigationView{
@@ -29,7 +30,9 @@ struct LoginView: View {
             } message: {
                 Text(loginVM.errorMessage)
             }
-
+            .sheet(isPresented: $showImagePicker, onDismiss: nil) {
+                ImagePicker(image: $loginVM.userAvatar)
+            }
         }
         .navigationViewStyle(.stack)
     }
@@ -55,12 +58,22 @@ extension LoginView{
     }
     private var avatarButton: some View{
         Button {
-            
+            showImagePicker = true
         } label: {
-            Image(systemName: "person.fill")
-                .font(.system(size: 64))
-                .padding()
-                .foregroundColor(.black)
+            VStack{
+                if let image = loginVM.userAvatar{
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 120, height: 120)
+                        .clipShape(Circle())
+                }else{
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 64))
+                        .padding()
+                        .foregroundColor(.black)
+                }
+            }
         }
     }
     private var inputSection: some View{
