@@ -51,17 +51,18 @@ class LoginViewModel: ObservableObject{
         showLoader = true
         FirebaseManager.shared.auth.createUser(withEmail: email, password: pass) {[weak self] (result, error) in
             guard let self = self else {return}
-            self.showLoader = false
             if let err = error{
                 self.handleError(err, title: "Error create user")
                 return
             }
-            self.persistUserInfoToStorage()
-            withAnimation {
-                self.checkLoginStatus()
+            self.persistUserInfoToStorage{
+                self.showLoader = false
+                withAnimation {
+                    self.checkLoginStatus()
+                }
+                print("Successfull create user, \(result?.user.uid ?? "nil")")
+                self.resetUserInfo()
             }
-            print("Successfull create user, \(result?.user.uid ?? "nil")")
-            self.resetUserInfo()
         }
     }
     
@@ -75,26 +76,24 @@ class LoginViewModel: ObservableObject{
     }
 
     
-    private func persistUserInfoToStorage(){
+    private func persistUserInfoToStorage(completion: @escaping () -> Void){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         let ref = FirebaseManager.shared.storage.reference(withPath: uid)
-        guard let image = self.userAvatar?.jpegData(compressionQuality: 0.9) else {return}
+        let image = preparingImageforUpload()
         ref.putData(image, metadata: nil) { [weak self] (metadate, error) in
             guard let self = self else {return}
             self.handleError(error, title: "Error upload image:")
             ref.downloadURL {[weak self]  (url, error) in
                 guard let self = self else {return}
                 self.handleError(error, title: "Error load image url")
-                self.storeUserInformation(url)
+                self.storeUserInformation(url, completion: completion)
             }
         }
     }
     
-    private func storeUserInformation(_ profileImageUrl: URL?){
-        guard let profileImageUrl = profileImageUrl else {return}
+    private func storeUserInformation(_ profileImageUrl: URL?, completion: @escaping () -> Void){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
-        let userDate = ["uid": uid, "email": email, "profileImageUrl": profileImageUrl.absoluteString, "name": userName]
-        
+        let userDate = ["uid": uid, "email": email, "profileImageUrl": profileImageUrl?.absoluteString ?? "", "name": userName]
         FirebaseManager.shared.firestore.collection("users")
             .document(uid).setData(userDate) { [weak self] (error) in
                 guard let self = self else {return}
@@ -102,11 +101,15 @@ class LoginViewModel: ObservableObject{
                     self.handleError(err, title: "")
                     return
                 }
-                print("success store user!")
+                completion()
             }
     }
     
-
+    private func preparingImageforUpload() -> Data{
+        guard let userAvatar = userAvatar, let imageData = userAvatar.jpegData(compressionQuality: 0.9) else {return Data()}
+        return imageData
+    }
+    
     private func handleError(_ error: Error?, title: String){
         Helpers.handleError(error, title: title, errorMessage: &errorMessage, showAlert: &showAlert)
     }

@@ -9,24 +9,18 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct ImageView: View {
-    let imageUrl: String?
+    let imageUrl: URL
     var body: some View {
-        Group{
-            if let image = imageUrl, let imageUrl = URL(string: image){
-                WebImage(url: imageUrl)
-                    .resizable()
-                    .placeholder{
-                        Color.secondary.opacity(0.3)
-                    }
-            }else{
+        WebImage(url: imageUrl)
+            .resizable()
+            .placeholder{
                 Color.secondary.opacity(0.3)
             }
-        }
     }
 }
 
 struct ImageView_Previews: PreviewProvider {
     static var previews: some View {
-        ImageView(imageUrl: "")
+        ImageView(imageUrl: URL(string: "")!)
     }
 }

@@ -5,7 +5,8 @@
 //  Created by Богдан Зыков on 04.06.2022.
 //
 
-import Foundation
+
+import Firebase
 
 final class Helpers{
     
@@ -15,5 +16,11 @@ final class Helpers{
             errorMessage = "\(title) \(error.localizedDescription)"
             showAlert = true
         }
+    }
+    
+    static func decodeUserData(_ snapshot: DocumentSnapshot?) -> ChatUser?{
+        guard let data = snapshot?.data() else {return nil}
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: data) else{return nil}
+        return try? JSONDecoder().decode(ChatUser.self, from: jsonData)
     }
 }

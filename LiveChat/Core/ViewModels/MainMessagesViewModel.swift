@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import Firebase
 
 class MainMessagesViewModel: ObservableObject{
     
@@ -23,14 +23,11 @@ class MainMessagesViewModel: ObservableObject{
     private func fetchCurrentUser(){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         FirebaseManager.shared.firestore.collection("users")
-            .document(uid).getDocument { [weak self] snapshot, error in
+            .document(uid).getDocument { [weak self] (snapshot, error) in
                 guard let self = self else {return}
                 self.handleError(error, title: "Failed to fetch current user")
-                guard let data = snapshot?.data() else {return}
-                guard let jsonData = try? JSONSerialization.data(withJSONObject: data) else{return}
-                if let decodedResponse = try? JSONDecoder().decode(ChatUser.self, from: jsonData){
-                    self.currentUser = decodedResponse
-                }
+                guard let userData = Helpers.decodeUserData(snapshot) else {return}
+                self.currentUser = userData
             }
     }
     

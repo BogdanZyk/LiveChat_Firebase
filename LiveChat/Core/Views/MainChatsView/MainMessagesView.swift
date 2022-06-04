@@ -6,12 +6,12 @@
 //
 
 import SwiftUI
-import SDWebImageSwiftUI
 
 struct MainMessagesView: View {
     @EnvironmentObject private var loginVM: LoginViewModel
     @StateObject private var mainMessVM = MainMessagesViewModel()
     @State private var showSideBarView: Bool = false
+    @State private var showNewMessageView: Bool = false
     var body: some View {
         NavigationView{
             VStack(spacing: 0) {
@@ -35,6 +35,9 @@ struct MainMessagesView: View {
                     navActionButton
                 }
             }
+            .sheet(isPresented: $showNewMessageView) {
+                CreateNewMessageView()
+            }
         }
     }
 }
@@ -53,9 +56,7 @@ extension MainMessagesView{
     //MARK: - navbar
     private var prorileAvatarNavView: some View{
         HStack {
-            ImageView(imageUrl: mainMessVM.currentUser?.profileImageUrl)
-                .frame(width: 35, height: 35)
-                .clipShape(Circle())
+            UserAvatarViewComponent(pathImage: mainMessVM.currentUser?.profileImageUrl)
             VStack(alignment: .leading, spacing: 2){
                 Text("Hey!")
                     .font(.caption)
@@ -113,7 +114,7 @@ extension MainMessagesView{
     
     private var newMessageButton: some View{
         Button {
-            
+            showNewMessageView.toggle()
         } label: {
             ZStack{
                 Color.blue

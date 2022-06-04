@@ -9,4 +9,6 @@ import Foundation
 
 struct ChatUser: Decodable{
     let uid, email, profileImageUrl, name: String
+    
+    
 }
