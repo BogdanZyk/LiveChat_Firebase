@@ -12,7 +12,7 @@ import Firebase
 struct LiveChatApp: App {
     var body: some Scene {
         WindowGroup {
-            LoginView()
+            StartView()
         }
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 struct LoginView: View {
     @State private var isLogin: Bool = false
     @State private var showImagePicker: Bool = false
-    @StateObject private var loginVM = LoginViewModel()
+    @EnvironmentObject private var loginVM: LoginViewModel
     var body: some View {
         NavigationView{
             ScrollView(.vertical, showsIndicators: false) {
@@ -41,6 +41,8 @@ struct LoginView: View {
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
+            .environmentObject(LoginViewModel())
+           // .preferredColorScheme(.dark)
     }
 }
 
@@ -79,6 +81,9 @@ extension LoginView{
     private var inputSection: some View{
         VStack(alignment: .leading, spacing: 20) {
             Group{
+                if !isLogin{
+                    TextField("Your name", text: $loginVM.userName)
+                }
                 TextField("Email", text: $loginVM.email)
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.none)
@@ -87,24 +92,33 @@ extension LoginView{
             .padding(12)
             .background(.white)
             .clipShape(RoundedRectangle(cornerRadius: 10))
-            loginOrCreateAcc
+            loginOrCreateButton
                 .padding(.top, 20)
         }
     }
     
-    private var loginOrCreateAcc: some View{
+    private var loginOrCreateButton: some View{
         Button {
             handleAction()
         } label: {
             HStack{
-                Text(isLogin ? "Login" : "Create Account")
-                    .foregroundColor(.white)
-                    .font(.system(size: 16, weight: .semibold))
-                    .padding(.vertical, 10)
+                Group{
+                    if loginVM.showLoader{
+                        ProgressView()
+                            .tint(.white)
+                    }else{
+                        Text(isLogin ? "Login" : "Create Account")
+                            .foregroundColor(.white)
+                            .font(.system(size: 16, weight: .semibold))
+                    }
+                    
+                }
+                .padding(.vertical, 10)
             }
             .frame(maxWidth: .infinity)
             .background(Color.blue, in: RoundedRectangle(cornerRadius: 10))
         }
+        .disabled(loginVM.showLoader)
 
     }
     private func handleAction(){

@@ -11,33 +11,71 @@ import SwiftUI
 
 class LoginViewModel: ObservableObject{
     @Published var email: String = ""
+    @Published var userName: String = ""
     @Published var userAvatar: UIImage?
     @Published var pass: String = ""
     @Published var errorMessage = ""
     @Published var showAlert: Bool = false
+    @Published var isloggedUser: Bool = false
+    @Published var showLoader: Bool = false
     
+    init(){
+        DispatchQueue.main.async {
+            self.checkLoginStatus()
+        }
+    }
     
-    
+    private func checkLoginStatus(){
+        isloggedUser = FirebaseManager.shared.auth.currentUser?.uid != nil
+    }
+
     
     public func login(){
-        FirebaseManager.shared.auth.signIn(withEmail: email, password: pass) {[weak self] result, error in
+        showLoader = true
+        FirebaseManager.shared.auth.signIn(withEmail: email, password: pass) {[weak self] (result, error) in
             guard let self = self else {return}
-            self.handleError(error, title: "Error login")
+            self.showLoader = false
+            if let err = error{
+                self.handleError(err, title: "Error login")
+                return
+            }
+            withAnimation {
+                self.checkLoginStatus()
+            }
             print("Successfull login, \(result?.user.uid ?? "nil")")
+            self.resetUserInfo()
         }
     }
     
     public func createAccount(){
-        FirebaseManager.shared.auth.createUser(withEmail: email, password: pass) {[weak self] result, error in
+        showLoader = true
+        FirebaseManager.shared.auth.createUser(withEmail: email, password: pass) {[weak self] (result, error) in
             guard let self = self else {return}
-            self.handleError(error, title: "Error create user")
-            self.persistImageToStorage()
+            self.showLoader = false
+            if let err = error{
+                self.handleError(err, title: "Error create user")
+                return
+            }
+            self.persistUserInfoToStorage()
+            withAnimation {
+                self.checkLoginStatus()
+            }
             print("Successfull create user, \(result?.user.uid ?? "nil")")
+            self.resetUserInfo()
         }
     }
     
-    private func persistImageToStorage(){
-//        let fileName = UUID().uuidString
+    public func signOut(){
+        DispatchQueue.main.async {
+            try? FirebaseManager.shared.auth.signOut()
+            withAnimation {
+                self.checkLoginStatus()
+            }
+        }
+    }
+
+    
+    private func persistUserInfoToStorage(){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         let ref = FirebaseManager.shared.storage.reference(withPath: uid)
         guard let image = self.userAvatar?.jpegData(compressionQuality: 0.9) else {return}
@@ -55,9 +93,9 @@ class LoginViewModel: ObservableObject{
     private func storeUserInformation(_ profileImageUrl: URL?){
         guard let profileImageUrl = profileImageUrl else {return}
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
-        let userDate = ["uid": uid, "email": self.email, "profileImageUrl": profileImageUrl.absoluteString]
+        let userDate = ["uid": uid, "email": email, "profileImageUrl": profileImageUrl.absoluteString, "name": userName]
         
-        FirebaseManager.shared.firestore.collection("user")
+        FirebaseManager.shared.firestore.collection("users")
             .document(uid).setData(userDate) { [weak self] (error) in
                 guard let self = self else {return}
                 if let err = error{
@@ -68,10 +106,14 @@ class LoginViewModel: ObservableObject{
             }
     }
     
+
     private func handleError(_ error: Error?, title: String){
-        if let error = error {
-            self.errorMessage = "\(title) \(error.localizedDescription)"
-            self.showAlert = true
-        }
+        Helpers.handleError(error, title: title, errorMessage: &errorMessage, showAlert: &showAlert)
+    }
+    private func resetUserInfo(){
+        email = ""
+        pass = ""
+        userName = ""
+        userAvatar = nil
     }
 }
