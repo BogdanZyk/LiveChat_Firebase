@@ -9,9 +9,11 @@ import SwiftUI
 
 struct MainMessagesView: View {
     @EnvironmentObject private var loginVM: LoginViewModel
+    @StateObject private var chatVM = ChatViewModel()
     @StateObject private var mainMessVM = MainMessagesViewModel()
     @State private var showSideBarView: Bool = false
     @State private var showNewMessageView: Bool = false
+    @State private var showChatView: Bool = false
     var body: some View {
         NavigationView{
             VStack(spacing: 0) {
@@ -22,6 +24,7 @@ struct MainMessagesView: View {
                 }
                 .listStyle(.plain)
                 userSettingNavigationLink
+                chatViewNavigationLink
             }
             .overlay(alignment: .bottomTrailing){
                 newMessageButton
@@ -36,7 +39,7 @@ struct MainMessagesView: View {
                 }
             }
             .sheet(isPresented: $showNewMessageView) {
-                CreateNewMessageView()
+                CreateNewMessageView(showChatView: $showChatView, chatVM: chatVM)
             }
         }
     }
@@ -71,6 +74,17 @@ extension MainMessagesView{
         Group{
             NavigationLink(isActive: $showSideBarView) {
                 SideBarView(loginVM: loginVM)
+            } label: {
+                EmptyView()
+            }
+        }
+    }
+    
+    private var chatViewNavigationLink: some View{
+        Group{
+            NavigationLink(isActive: $showChatView) {
+                ChatView()
+                    .environmentObject(chatVM)
             } label: {
                 EmptyView()
             }

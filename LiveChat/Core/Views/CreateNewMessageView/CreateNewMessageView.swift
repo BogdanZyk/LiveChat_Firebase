@@ -9,38 +9,84 @@ import SwiftUI
 
 struct CreateNewMessageView: View {
     @Environment(\.self) var env
-    @State private var text: String = ""
+    @Binding var showChatView: Bool
+    @ObservedObject var chatVM: ChatViewModel
+    @StateObject private var createMessVM = CreateNewMessageViewModel()
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 0){
                 List{
-                    Text("test")
+                    ForEach(createMessVM.users, id: \.uid) { user in
+                        userRowView(user)
+                    }
                 }
+                .listStyle(.plain)
             }
-            .searchable(text: $text, prompt: "Search users")
+            .searchable(text: $createMessVM.searchText, prompt: "Search users", suggestions: {
+                searchResultSection
+            })
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Send message")
-                        .font(.headline).bold()
+                    navTitle
                 }
                 ToolbarItem(placement: .cancellationAction) {
-                    Button {
-                        env.dismiss()
-                    } label: {
-                        Text("Cancel")
-                    }
-
+                    closeButton
                 }
-        }
+            }
         }
     }
 }
 
 struct CreateNewMessageView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            CreateNewMessageView()
+        CreateNewMessageView(showChatView: .constant(true), chatVM: ChatViewModel())
+    }
+}
+
+
+extension CreateNewMessageView{
+    
+    //MARK: -  Toolbar section
+    
+    private var navTitle: some View{
+        Text("Send message")
+            .font(.headline).bold()
+    }
+    private var closeButton: some View{
+        Button {
+            env.dismiss()
+        } label: {
+            Text("Cancel")
+        }
+    }
+    private func userRowView(_ user: ChatUser) -> some View{
+        Button {
+            chatVM.selectedChatUser = user
+            showChatView.toggle()
+            env.dismiss()
+        } label: {
+            HStack{
+                UserAvatarViewComponent(pathImage: user.profileImageUrl, size: CGSize.init(width: 50, height: 50))
+                Text(user.name)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.primary)
+            }
+            .padding(.vertical, 5)
+        }
+    }
+    
+    private var searchResultSection: some View{
+        Group{
+            if !createMessVM.searchText.isEmpty && createMessVM.searchResult.isEmpty{
+                Text("No search user")
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding()
+            }else{
+                ForEach(createMessVM.searchResult, id: \.uid) { user in
+                    userRowView(user)
+                }
+            }
         }
     }
 }
