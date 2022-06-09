@@ -13,7 +13,7 @@ class MainMessagesViewModel: ObservableObject{
     @Published var errorMessage = ""
     @Published var showAlert: Bool = false
     @Published var currentUser: ChatUser?
-
+    @Published var selectedChatUser: ChatUser?
     
     init(){
         fetchCurrentUser()

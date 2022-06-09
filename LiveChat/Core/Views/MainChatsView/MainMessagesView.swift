@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MainMessagesView: View {
     @EnvironmentObject private var loginVM: LoginViewModel
-    @StateObject private var chatVM = ChatViewModel()
     @StateObject private var mainMessVM = MainMessagesViewModel()
     @State private var showSideBarView: Bool = false
     @State private var showNewMessageView: Bool = false
@@ -39,7 +38,7 @@ struct MainMessagesView: View {
                 }
             }
             .sheet(isPresented: $showNewMessageView) {
-                CreateNewMessageView(showChatView: $showChatView, chatVM: chatVM)
+                CreateNewMessageView(showChatView: $showChatView, selectedChatUser: $mainMessVM.selectedChatUser)
             }
         }
     }
@@ -83,8 +82,7 @@ extension MainMessagesView{
     private var chatViewNavigationLink: some View{
         Group{
             NavigationLink(isActive: $showChatView) {
-                ChatView()
-                    .environmentObject(chatVM)
+                ChatView(selectedChatUser: mainMessVM.selectedChatUser)
             } label: {
                 EmptyView()
             }

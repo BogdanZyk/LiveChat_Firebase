@@ -32,6 +32,7 @@
 		5AFA5FA5284C1D1D0072B57E /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FA4284C1D1D0072B57E /* ChatViewModel.swift */; };
 		5AFA5FA8284C259A0072B57E /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FA7284C259A0072B57E /* ChatView.swift */; };
 		5AFA5FAB284C266A0072B57E /* ReversedScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FAA284C266A0072B57E /* ReversedScrollView.swift */; };
+		5AFA5FAD284D12530072B57E /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FAC284D12520072B57E /* ChatMessage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,7 @@
 		5AFA5FA4284C1D1D0072B57E /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		5AFA5FA7284C259A0072B57E /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		5AFA5FAA284C266A0072B57E /* ReversedScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversedScrollView.swift; sourceTree = "<group>"; };
+		5AFA5FAC284D12520072B57E /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				5A6ACEEB284BA7B300C9B49C /* ChatUser.swift */,
+				5AFA5FAC284D12520072B57E /* ChatMessage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -326,6 +329,7 @@
 				5AFA5F9E284BF9200072B57E /* CreateNewMessageView.swift in Sources */,
 				5AFA5FA8284C259A0072B57E /* ChatView.swift in Sources */,
 				5AE740A028469AD00001893B /* LiveChatApp.swift in Sources */,
+				5AFA5FAD284D12530072B57E /* ChatMessage.swift in Sources */,
 				5A6ACEE5284B972300C9B49C /* SideBarView.swift in Sources */,
 				5AE740BB2846A7A20001893B /* LoginViewModel.swift in Sources */,
 				5A6ACEE7284B9ED400C9B49C /* MainMessagesViewModel.swift in Sources */,

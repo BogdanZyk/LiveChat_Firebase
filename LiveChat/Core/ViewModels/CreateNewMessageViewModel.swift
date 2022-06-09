@@ -46,7 +46,6 @@ class CreateNewMessageViewModel: ObservableObject{
                     guard let userData = Helpers.decodeUserData(snapshot) else {return}
                     self.users.append(userData)
                 })
-                //self.users.filter({$0.uid != })
             }
     }
     private func handleError(_ error: Error?, title: String){
