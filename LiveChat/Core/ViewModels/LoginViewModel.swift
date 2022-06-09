@@ -88,7 +88,7 @@ class LoginViewModel: ObservableObject{
     
     private func storeUserInformation(_ profileImageUrl: URL?, completion: @escaping () -> Void){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
-        let userDate = ["uid": uid, "email": email, "profileImageUrl": profileImageUrl?.absoluteString ?? "", "name": userName]
+        let userDate = ["uid": uid, "email": email, FBConstant.profileImageUrl: profileImageUrl?.absoluteString ?? "", FBConstant.name: userName]
         FirebaseManager.shared.firestore.collection("users")
             .document(uid).setData(userDate) { [weak self] (error) in
                 guard let self = self else {return}

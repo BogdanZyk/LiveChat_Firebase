@@ -16,10 +16,17 @@ struct MainMessagesView: View {
     var body: some View {
         NavigationView{
             VStack(spacing: 0) {
+//                ScrollView(.horizontal, showsIndicators: false){
+//                    HStack{
+//                        ForEach(mainMessVM.recentMessages){ resentMessage in
+//                            UserAvatarViewComponent(pathImage: resentMessage.profileImageUrl, size: .init(width: 40, height: 40))
+//                        }
+//                    }
+//                    .padding(.leading, 20)
+//                }
+//
                 List{
-                    ForEach(1...10, id: \.self){ ind in
-                        chatRowView()
-                    }
+                    chatRowSection
                 }
                 .listStyle(.plain)
                 userSettingNavigationLink
@@ -106,21 +113,31 @@ extension MainMessagesView{
         .font(.system(size: 14, weight: .semibold))
     }
     
-    private func chatRowView() -> some View{
-        HStack(spacing: 15){
-            Image(systemName: "person.fill")
-                .font(.system(size: 32))
-            VStack(alignment: .leading, spacing: 8){
-                Text("UserName")
-                    .font(.system(size: 16, weight: .bold))
-                Text("Mess sed to user")
-                    .font(.system(size: 14))
-                    .foregroundColor(.secondary)
+    private func chatRowView(_ resentMessage: RecentMessages) -> some View{
+        Button {
+            mainMessVM.selectedChatUser = ChatUser(uid: resentMessage.toId, email: "", profileImageUrl: resentMessage.profileImageUrl, name: resentMessage.name)
+            showChatView.toggle()
+        } label: {
+            HStack(spacing: 15){
+                UserAvatarViewComponent(pathImage: resentMessage.profileImageUrl, size: .init(width: 55, height: 55))
+                VStack(alignment: .leading, spacing: 8){
+                    Text(resentMessage.name)
+                        .font(.system(size: 16, weight: .bold))
+                    Text(resentMessage.text)
+                        .font(.system(size: 14))
+                        .foregroundColor(.secondary)
+                }
+                .lineLimit(1)
+                Spacer()
+                Text("22d")
+                    .font(.system(size: 14, weight: .semibold))
             }
-            .lineLimit(1)
-            Spacer()
-            Text("22d")
-                .font(.system(size: 14, weight: .semibold))
+        }
+    }
+    
+    private var chatRowSection: some View{
+        ForEach(mainMessVM.recentMessages){ resentMessage in
+            chatRowView(resentMessage)
         }
     }
     

@@ -14,9 +14,12 @@ class MainMessagesViewModel: ObservableObject{
     @Published var showAlert: Bool = false
     @Published var currentUser: ChatUser?
     @Published var selectedChatUser: ChatUser?
+    @Published var recentMessages = [RecentMessages]()
+    
     
     init(){
         fetchCurrentUser()
+        fetchRecentMessages()
     }
     
     
@@ -31,6 +34,29 @@ class MainMessagesViewModel: ObservableObject{
             }
     }
     
+    private func fetchRecentMessages(){
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        FirebaseManager.shared.firestore
+            .collection(FBConstant.resentMessages)
+            .document(FBConstant.chat + uid)
+            .collection("messages")
+            .order(by: FBConstant.timestamp)
+            .addSnapshotListener { [weak self] (shapshot, error) in
+                guard let self = self else {return}
+                if let error = error{
+                    Helpers.handleError(error, title: "Failed to listen for recent messages", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
+                    return
+                }
+                shapshot?.documentChanges.forEach({ change in
+                        let docId = change.document.documentID
+                    if let index = self.recentMessages.firstIndex(where: {$0.documentId == docId}){
+                        self.recentMessages.remove(at: index)
+                    }
+                    self.recentMessages.insert(.init(documentId: docId, data: change.document.data()), at: 0)
+                        //self.recentMessages.append()
+                })
+            }
+    }
     
     private func handleError(_ error: Error?, title: String){
         Helpers.handleError(error, title: title, errorMessage: &errorMessage, showAlert: &showAlert)
