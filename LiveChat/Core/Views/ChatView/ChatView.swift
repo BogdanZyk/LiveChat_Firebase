@@ -16,6 +16,7 @@ struct ChatView: View {
         self.selectedChatUser = selectedChatUser
         self._chatVM = StateObject.init(wrappedValue: ChatViewModel(selectedChatUser: selectedChatUser))
     }
+    @State private var showProfileView: Bool = false
     let scrollId = "BOTTOM"
     var body: some View {
         VStack(spacing: 0){
@@ -31,6 +32,12 @@ struct ChatView: View {
                 }
             }
             chatBottomBar
+            NavigationLink(isActive: $showProfileView) {
+                Text("profile View")
+            } label: {
+                EmptyView()
+            }
+
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -40,7 +47,7 @@ struct ChatView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    
+                    showProfileView.toggle()
                 } label: {
                     UserAvatarViewComponent(pathImage: chatVM.selectedChatUser?.profileImageUrl)
                 }

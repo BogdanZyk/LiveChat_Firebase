@@ -17,19 +17,23 @@ class ChatViewModel: ObservableObject{
     @Published var chatText: String = ""
     @Published var messageReceive: Int = 0
     @Published var chatMessages = [ChatMessage]()
-    private var firestoreListener: ListenerRegistration?
+     var firestoreListener: ListenerRegistration?
     
     
     init(selectedChatUser: ChatUser?){
+        print("init")
         self.selectedChatUser = selectedChatUser
         fetchMessages()
     }
     
-
+    deinit{
+        print("deinit")
+        firestoreListener?.remove()
+    }
     
     //MARK: - Fecth all MESSAGES
     
-    public func fetchMessages(){
+     func fetchMessages(){
         guard let fromId = FirebaseManager.shared.auth.currentUser?.uid, let toId = selectedChatUser?.uid else {return}
         firestoreListener = FirebaseManager.shared.firestore
             .collection(FBConstant.rooms)
