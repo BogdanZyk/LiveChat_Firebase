@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import FirebaseFirestoreSwift
 
 class MainMessagesViewModel: ObservableObject{
     
@@ -15,13 +16,17 @@ class MainMessagesViewModel: ObservableObject{
     @Published var currentUser: ChatUser?
     @Published var selectedChatUser: ChatUser?
     @Published var recentMessages = [RecentMessages]()
-    
+    private var firestoreListener: ListenerRegistration?
     
     init(){
         fetchCurrentUser()
         fetchRecentMessages()
     }
     
+    deinit{
+        self.recentMessages.removeAll()
+        firestoreListener?.remove()
+    }
     
     private func fetchCurrentUser(){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
@@ -36,7 +41,7 @@ class MainMessagesViewModel: ObservableObject{
     
     private func fetchRecentMessages(){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
-        FirebaseManager.shared.firestore
+        firestoreListener = FirebaseManager.shared.firestore
             .collection(FBConstant.resentMessages)
             .document(FBConstant.chat + uid)
             .collection("messages")
@@ -49,11 +54,17 @@ class MainMessagesViewModel: ObservableObject{
                 }
                 shapshot?.documentChanges.forEach({ change in
                         let docId = change.document.documentID
-                    if let index = self.recentMessages.firstIndex(where: {$0.documentId == docId}){
+                    if let index = self.recentMessages.firstIndex(where: {$0.id == docId}){
                         self.recentMessages.remove(at: index)
                     }
-                    self.recentMessages.insert(.init(documentId: docId, data: change.document.data()), at: 0)
-                        //self.recentMessages.append()
+                    
+                    do{
+                        let rm = try change.document.data(as: RecentMessages.self)
+                            self.recentMessages.insert(rm, at: 0)
+                        
+                    }catch{
+                        print("Failed to decode data \(error.localizedDescription)")
+                    }
                 })
             }
     }

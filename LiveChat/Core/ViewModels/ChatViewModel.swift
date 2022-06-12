@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import FirebaseFirestoreSwift
 
 class ChatViewModel: ObservableObject{
     
@@ -16,18 +17,21 @@ class ChatViewModel: ObservableObject{
     @Published var chatText: String = ""
     @Published var messageReceive: Int = 0
     @Published var chatMessages = [ChatMessage]()
+    private var firestoreListener: ListenerRegistration?
+    
     
     init(selectedChatUser: ChatUser?){
         self.selectedChatUser = selectedChatUser
         fetchMessages()
     }
     
+
     
     //MARK: - Fecth all MESSAGES
     
     public func fetchMessages(){
         guard let fromId = FirebaseManager.shared.auth.currentUser?.uid, let toId = selectedChatUser?.uid else {return}
-        FirebaseManager.shared.firestore
+        firestoreListener = FirebaseManager.shared.firestore
             .collection(FBConstant.rooms)
             .document(FBConstant.room + fromId)
             .collection(FBConstant.messages + toId)
@@ -40,9 +44,13 @@ class ChatViewModel: ObservableObject{
                 }
                 shapshot?.documentChanges.forEach({ change in
                     if change.type == .added{
-                        let data = change.document.data()
-                        self.chatMessages.append(.init(documentId: change.document.documentID, data: data))
-                        
+                        do{
+                            let message = try change.document.data(as: ChatMessage.self)
+                            self.chatMessages.append(message)
+                            print("add new message now ->>>>>>>>>")
+                        }catch{
+                            print("Failed to decode data \(error.localizedDescription)")
+                        }
                     }
                 })
                 DispatchQueue.main.async {
@@ -138,8 +146,7 @@ class ChatViewModel: ObservableObject{
                 return
             }
         }
-    }
-        
+    }  
 }
 
 

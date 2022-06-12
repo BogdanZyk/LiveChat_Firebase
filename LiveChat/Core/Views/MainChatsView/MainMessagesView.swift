@@ -129,7 +129,7 @@ extension MainMessagesView{
                 }
                 .lineLimit(1)
                 Spacer()
-                Text("22d")
+                Text(resentMessage.timeAgo)
                     .font(.system(size: 14, weight: .semibold))
             }
         }
