@@ -51,4 +51,7 @@ class CreateNewMessageViewModel: ObservableObject{
     private func handleError(_ error: Error?, title: String){
         Helpers.handleError(error, title: title, errorMessage: &errorMessage, showAlert: &showAlert)
     }
+    
+    
+
 }

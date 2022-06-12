@@ -10,6 +10,7 @@ import SwiftUI
 struct MainMessagesView: View {
     @EnvironmentObject private var loginVM: LoginViewModel
     @StateObject private var mainMessVM = MainMessagesViewModel()
+    @StateObject private var userVM = UserManagerViewModel()
     @State private var showSideBarView: Bool = false
     @State private var showNewMessageView: Bool = false
     @State private var showChatView: Bool = false
@@ -29,8 +30,11 @@ struct MainMessagesView: View {
                     chatRowSection
                 }
                 .listStyle(.plain)
+                
+                
                 userSettingNavigationLink
                 chatViewNavigationLink
+                
             }
             .overlay(alignment: .bottomTrailing){
                 newMessageButton
@@ -65,11 +69,11 @@ extension MainMessagesView{
     //MARK: - navbar
     private var prorileAvatarNavView: some View{
         HStack {
-            UserAvatarViewComponent(pathImage: mainMessVM.currentUser?.profileImageUrl)
+            UserAvatarViewComponent(pathImage: userVM.currentUser?.profileImageUrl)
             VStack(alignment: .leading, spacing: 2){
                 Text("Hey!")
                     .font(.caption)
-                Text(mainMessVM.currentUser?.name ?? "")
+                Text(userVM.currentUser?.name ?? "")
                     .font(.system(size: 14, weight: .semibold))
             }
         }
@@ -89,7 +93,7 @@ extension MainMessagesView{
     private var chatViewNavigationLink: some View{
         Group{
             NavigationLink(isActive: $showChatView) {
-                ChatView(selectedChatUser: mainMessVM.selectedChatUser)
+                ChatView(selectedChatUser: mainMessVM.selectedChatUser, currentUser: userVM.currentUser)
             } label: {
                 EmptyView()
             }
@@ -131,6 +135,12 @@ extension MainMessagesView{
                 Spacer()
                 Text(resentMessage.timeAgo)
                     .font(.system(size: 14, weight: .semibold))
+            }
+            
+       }
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+            Button("Delete Chat", role: .destructive) {
+                mainMessVM.deleteChat(id: resentMessage.toId)
             }
         }
     }

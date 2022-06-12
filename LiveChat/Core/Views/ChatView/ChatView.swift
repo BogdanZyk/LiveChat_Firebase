@@ -12,9 +12,9 @@ struct ChatView: View {
     @StateObject private var chatVM: ChatViewModel
     let columns = [GridItem(.flexible(minimum: 10))]
     let currentUserId = FirebaseManager.shared.auth.currentUser?.uid ?? ""
-    init(selectedChatUser: ChatUser?){
+    init(selectedChatUser: ChatUser?, currentUser: ChatUser?){
         self.selectedChatUser = selectedChatUser
-        self._chatVM = StateObject.init(wrappedValue: ChatViewModel(selectedChatUser: selectedChatUser))
+        self._chatVM = StateObject.init(wrappedValue: ChatViewModel(selectedChatUser: selectedChatUser, currentUser: currentUser))
     }
     @State private var showProfileView: Bool = false
     let scrollId = "BOTTOM"
@@ -33,7 +33,7 @@ struct ChatView: View {
             }
             chatBottomBar
             NavigationLink(isActive: $showProfileView) {
-                Text("profile View")
+                UserProfileView(userId: chatVM.selectedChatUser?.uid)
             } label: {
                 EmptyView()
             }
@@ -47,6 +47,7 @@ struct ChatView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
+                    print(chatVM.selectedChatUser?.uid)
                     showProfileView.toggle()
                 } label: {
                     UserAvatarViewComponent(pathImage: chatVM.selectedChatUser?.profileImageUrl)
@@ -59,13 +60,14 @@ struct ChatView: View {
 struct ChatView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ChatView(selectedChatUser: ChatUser(uid: "1", email: "test@test.com", profileImageUrl: "", name: "tester"))
+            ChatView(selectedChatUser: ChatUser(uid: "1", email: "test@test.com", profileImageUrl: "", name: "tester"), currentUser: ChatUser(uid: "2", email: "test2@test.com", profileImageUrl: "", name: "tester2"))
         }
     }
 }
 
 
 extension ChatView{
+    
     private var chatBottomBar: some View{
         VStack(spacing: 20) {
             Divider()

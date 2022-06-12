@@ -8,18 +8,17 @@
 import Foundation
 import Firebase
 import FirebaseFirestoreSwift
+import SwiftUI
 
 class MainMessagesViewModel: ObservableObject{
     
     @Published var errorMessage = ""
     @Published var showAlert: Bool = false
-    @Published var currentUser: ChatUser?
     @Published var selectedChatUser: ChatUser?
     @Published var recentMessages = [RecentMessages]()
     private var firestoreListener: ListenerRegistration?
     
     init(){
-        fetchCurrentUser()
         fetchRecentMessages()
     }
     
@@ -28,23 +27,14 @@ class MainMessagesViewModel: ObservableObject{
         firestoreListener?.remove()
     }
     
-    private func fetchCurrentUser(){
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
-        FirebaseManager.shared.firestore.collection("users")
-            .document(uid).getDocument { [weak self] (snapshot, error) in
-                guard let self = self else {return}
-                self.handleError(error, title: "Failed to fetch current user")
-                guard let userData = Helpers.decodeUserData(snapshot) else {return}
-                self.currentUser = userData
-            }
-    }
+
     
     private func fetchRecentMessages(){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         firestoreListener = FirebaseManager.shared.firestore
-            .collection(FBConstant.resentMessages)
-            .document(FBConstant.chat + uid)
-            .collection("messages")
+            .collection(FBConstant.userChats)
+            .document(uid)
+            .collection(FBConstant.chats)
             .order(by: FBConstant.timestamp)
             .addSnapshotListener { [weak self] (shapshot, error) in
                 guard let self = self else {return}
@@ -54,6 +44,9 @@ class MainMessagesViewModel: ObservableObject{
                 }
                 shapshot?.documentChanges.forEach({ change in
                         let docId = change.document.documentID
+                    
+                  
+                    
                     if let index = self.recentMessages.firstIndex(where: {$0.id == docId}){
                         self.recentMessages.remove(at: index)
                     }
@@ -65,11 +58,45 @@ class MainMessagesViewModel: ObservableObject{
                     }catch{
                         print("Failed to decode data \(error.localizedDescription)")
                     }
+                    
                 })
             }
     }
-    
-    private func handleError(_ error: Error?, title: String){
-        Helpers.handleError(error, title: title, errorMessage: &errorMessage, showAlert: &showAlert)
+    public func deleteChat(id: String){
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        FirebaseManager.shared.firestore
+            .collection(FBConstant.userChats)
+            .document(uid)
+            .collection(FBConstant.chats)
+            .document(id)
+            .delete { error in
+                if let error = error{
+                    Helpers.handleError(error, title: "Failed to delete chat", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
+                }else{
+                    self.deleteMessages(id: id, uid: uid)
+                    withAnimation {
+                        if let index =  self.recentMessages.firstIndex(where: {$0.toId == id}){
+                            self.recentMessages.remove(at: index)
+                        }
+                    }
+                }
+            }
     }
+    
+    private func deleteMessages(id: String, uid: String){
+        let room = Helpers.getRoomUid(toId: id, fromId: uid)
+        print(room)
+        FirebaseManager.shared.firestore
+            .collection(FBConstant.chatMessages)
+            .document(room)
+            .collection(FBConstant.messages)
+            .document()
+            .delete { error in
+                if let error = error{
+                    Helpers.handleError(error, title: "Failed to delete all messages", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
+                }
+                print("delete!!")
+            }
+    }
+
 }

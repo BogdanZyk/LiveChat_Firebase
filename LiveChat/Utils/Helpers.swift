@@ -23,4 +23,8 @@ final class Helpers{
         guard let jsonData = try? JSONSerialization.data(withJSONObject: data) else{return nil}
         return try? JSONDecoder().decode(ChatUser.self, from: jsonData)
     }
+    
+    static func getRoomUid(toId: String, fromId: String) -> String{
+        toId > fromId ? (fromId + toId) : (toId + fromId)
+    }
 }
