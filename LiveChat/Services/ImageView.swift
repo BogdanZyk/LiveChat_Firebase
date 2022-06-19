@@ -24,3 +24,5 @@ struct ImageView_Previews: PreviewProvider {
         ImageView(imageUrl: URL(string: "")!)
     }
 }
+
+

@@ -12,7 +12,7 @@ import FirebaseStorage
 class LoginViewModel: ObservableObject{
     @Published var email: String = ""
     @Published var userName: String = ""
-    @Published var userAvatar: UIImage?
+    @Published var imageData: ImageData?
     @Published var pass: String = ""
     @Published var errorMessage = ""
     @Published var showAlert: Bool = false
@@ -100,14 +100,11 @@ class LoginViewModel: ObservableObject{
             }
     }
     
-    private func preparingImageforUpload() -> Data?{
-        guard let userAvatar = userAvatar, let imageData = userAvatar.jpegData(compressionQuality: 0.9) else {return nil}
-        return imageData
-    }
+
     
     private func uploadImage(ref: StorageReference) -> URL?{
         var returnUrl: URL?
-        guard let imageData = preparingImageforUpload() else {return nil}
+        guard let imageData = Helpers.preparingImageforUpload(imageData?.image) else {return nil}
         ref.putData(imageData, metadata: nil) { [weak self] (metadate, error) in
             guard let self = self else {return}
             self.handleError(error, title: "Error upload image:")
@@ -128,6 +125,6 @@ class LoginViewModel: ObservableObject{
         email = ""
         pass = ""
         userName = ""
-        userAvatar = nil
+        imageData = nil
     }
 }

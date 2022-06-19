@@ -31,7 +31,7 @@ struct LoginView: View {
                 Text(loginVM.errorMessage)
             }
             .sheet(isPresented: $showImagePicker, onDismiss: nil) {
-                ImagePicker(image: $loginVM.userAvatar)
+                ImagePicker(imageData: $loginVM.imageData)
             }
         }
         .navigationViewStyle(.stack)
@@ -63,7 +63,7 @@ extension LoginView{
             showImagePicker = true
         } label: {
             VStack{
-                if let image = loginVM.userAvatar{
+                if let image = loginVM.imageData?.image{
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFill()

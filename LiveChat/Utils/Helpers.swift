@@ -7,6 +7,7 @@
 
 
 import Firebase
+import SwiftUI
 
 final class Helpers{
     
@@ -27,4 +28,14 @@ final class Helpers{
     static func getRoomUid(toId: String, fromId: String) -> String{
         toId > fromId ? (fromId + toId) : (toId + fromId)
     }
+    
+    
+    
+    static func preparingImageforUpload(_ image: UIImage?, compressionQuality: CGFloat = 0.9) -> Data?{
+        guard let image = image, let imageData = image.jpegData(compressionQuality: compressionQuality) else {return nil}
+        return imageData
+    }
+    
+    
+
 }

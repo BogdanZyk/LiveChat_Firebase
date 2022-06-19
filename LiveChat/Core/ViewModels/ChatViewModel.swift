@@ -5,9 +5,11 @@
 //  Created by Богдан Зыков on 05.06.2022.
 //
 
-import Foundation
+import SwiftUI
 import Firebase
 import FirebaseFirestoreSwift
+import FirebaseFirestore
+import FirebaseStorage
 
 class ChatViewModel: ObservableObject{
     
@@ -18,10 +20,12 @@ class ChatViewModel: ObservableObject{
     @Published var chatText: String = ""
     @Published var messageReceive: Int = 0
     @Published var chatMessages = [ChatMessage]()
-    
+    @Published var imageData: ImageData?
+    @Published var selectedChatMessages: ChatMessage?
     
     var firestoreListener: ListenerRegistration?
     
+    let mockchatMessages: [ChatMessage] = [ChatMessage(id: "1", fromId: "1", toId: "2", imageURL: "https://firebasestorage.googleapis.com/v0/b/live-chat-6f042.appspot.com/o/imagesChat_8aCkzc9qfCZ4LSjbgvLwYlyFhYa2ZqT9lsCoKFd9dZwcJYaQ3tuZ8nl1%2F4C84DB32-854C-4813-AE56-D69502FD9FBC.jpeg?alt=media&token=d03a696e-a70a-4973-aba1-2a99229e447f", text: "test")]
     
     init(selectedChatUser: ChatUser?, currentUser: ChatUser?){
         print("init")
@@ -73,19 +77,30 @@ class ChatViewModel: ObservableObject{
     
     public func sendMessage(){
         guard let fromId = FirebaseManager.shared.auth.currentUser?.uid, let toId = selectedChatUser?.uid else {return}
-        let messageData = [FBConstant.fromId:fromId,
-                           FBConstant.toId: toId,
-                           FBConstant.text: chatText,
-                           FBConstant.timestamp: Timestamp()
-        ] as [String : Any]
-        
-        createChatMessages(fromId: fromId, toId: toId, messageData: messageData)
-        createUserChats(isResiver: true)
-        createUserChats(isResiver: false)
-        chatText = ""
-        
+        createMessage(fromId: fromId, toId: toId) { [weak self] in
+            guard let self = self else {return}
+            self.createUserChats(isResiver: true)
+            self.createUserChats(isResiver: false)
+            self.chatText = ""
+            self.imageData = nil
+        }
     }
     
+    
+    private func createMessage(fromId: String, toId: String, completion: @escaping () -> Void){
+       let path = Helpers.getRoomUid(toId: toId, fromId: fromId)
+        let ref = FirebaseManager.shared.storage.reference().child("imagesChat_\(path)").child(imageData?.imageName ?? "noName")
+        uploadImage(ref: ref) { url in
+            let messageData = [FBConstant.fromId:fromId,
+                               FBConstant.toId: toId,
+                               "imageURL": url?.absoluteString ?? "",
+                               FBConstant.text: self.chatText,
+                               FBConstant.timestamp: Timestamp()
+            ] as [String : Any]
+            self.saveMessageInFirebasestore(fromId: fromId, toId: toId, messageData: messageData, completion: completion)
+        }
+    }
+
    
     
     //MARK: -  create User Chats
@@ -116,7 +131,7 @@ class ChatViewModel: ObservableObject{
     }
     
     //MARK: - create messages
-    private func createChatMessages(fromId: String, toId: String, messageData: [String : Any]){
+    private func saveMessageInFirebasestore(fromId: String, toId: String, messageData: [String : Any], completion: @escaping () -> Void){
         let room = Helpers.getRoomUid(toId: toId, fromId: fromId)
         let document = FirebaseManager.shared.firestore
             .collection(FBConstant.chatMessages)
@@ -128,9 +143,29 @@ class ChatViewModel: ObservableObject{
                 Helpers.handleError(error, title: "Failed to save message", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
                 return
             }
+            completion()
         }
     }
     
+    
+    private func uploadImage(ref: StorageReference, completion: @escaping (_ url: URL?) -> Void){
+        guard let imageData = Helpers.preparingImageforUpload(imageData?.image) else {return completion(nil)}
+        ref.putData(imageData, metadata: nil) { [weak self] (metadate, error) in
+            guard let self = self else {return completion(nil)}
+            if let error = error{
+                Helpers.handleError(error, title: "Failed to upload image:", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
+                return
+            }
+            ref.downloadURL {[weak self]  (url, error) in
+                guard let self = self else {return completion(nil)}
+                if let error = error{
+                    Helpers.handleError(error, title: "Failed to load image url:", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
+                    return
+                }
+                completion(url)
+            }
+        }
+    }
     
  
 }

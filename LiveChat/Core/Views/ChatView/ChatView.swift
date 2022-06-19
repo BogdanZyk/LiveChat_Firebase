@@ -17,6 +17,8 @@ struct ChatView: View {
         self._chatVM = StateObject.init(wrappedValue: ChatViewModel(selectedChatUser: selectedChatUser, currentUser: currentUser))
     }
     @State private var showProfileView: Bool = false
+    @State private var showImagePicker: Bool = false
+    @State private var showDetailsImageView: Bool = false
     let scrollId = "BOTTOM"
     var body: some View {
         VStack(spacing: 0){
@@ -37,7 +39,12 @@ struct ChatView: View {
             } label: {
                 EmptyView()
             }
-
+        }
+        .overlay{
+            detailsImageView
+        }
+        .sheet(isPresented: $showImagePicker, onDismiss: nil) {
+            ImagePicker(imageData: $chatVM.imageData)
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -47,7 +54,6 @@ struct ChatView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    print(chatVM.selectedChatUser?.uid)
                     showProfileView.toggle()
                 } label: {
                     UserAvatarViewComponent(pathImage: chatVM.selectedChatUser?.profileImageUrl)
@@ -69,9 +75,17 @@ struct ChatView_Previews: PreviewProvider {
 extension ChatView{
     
     private var chatBottomBar: some View{
-        VStack(spacing: 20) {
+        VStack(alignment: .leading, spacing: 20) {
             Divider()
+            imageViewForChatBottomBar
             HStack(spacing: 15) {
+                Button {
+                    showImagePicker.toggle()
+                } label: {
+                    Image(systemName: "photo.on.rectangle.angled")
+                        .font(.title3)
+                        .foregroundColor(.blue)
+                }
                 Group{
                     TextField("Enter your message...", text: $chatVM.chatText)
                 }
@@ -88,10 +102,35 @@ extension ChatView{
                         .foregroundColor(chatVM.chatText.isEmpty ? .secondary : .blue)
                 }
                 .disabled(chatVM.chatText.isEmpty)
-            }.padding(.horizontal, 15)
+            }
         }
+        .padding(.horizontal, 15)
         .padding(.bottom, 10)
         .background(Color.gray.opacity(0.3))
+    }
+    
+    private var imageViewForChatBottomBar: some View{
+        Group{
+            if let image = chatVM.imageData?.image{
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 100, height: 100)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+        }
+        .overlay(alignment: .topTrailing) {
+            Button {
+                withAnimation(.easeInOut(duration: 0.15)) {
+                    chatVM.imageData = nil
+                }
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundColor(.white)
+                    .font(.callout)
+                    .padding(5)
+            }
+        }
     }
     
     private var emptyBottomAnhor: some View{
@@ -102,7 +141,7 @@ extension ChatView{
     
     private var messagesSection: some View{
         LazyVGrid(columns: columns, spacing: 0, pinnedViews: [.sectionHeaders]) {
-            ForEach(chatVM.chatMessages){
+            ForEach(chatVM.mockchatMessages){
                 messageRowView(messages: $0)
             }
         }.padding(.bottom, 10)
@@ -112,7 +151,13 @@ extension ChatView{
         Group {
             let isRecevied = messages.fromId == currentUserId
             HStack {
-                VStack {
+                VStack(alignment: .leading, spacing: 5) {
+                    if let image = messages.imageURL, let imageUrl = URL(string: image){
+                        ImageView(imageUrl: imageUrl)
+                            .frame(width: 220, height: 200)
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                    }
+                    
                     Text(messages.text)
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(isRecevied ? .white : .black)
@@ -124,6 +169,31 @@ extension ChatView{
                 .padding(.vertical, 4)
             }
             .frame(maxWidth: .infinity, alignment: isRecevied ? .trailing : .leading)
+            .onTapGesture {
+                chatVM.selectedChatMessages = messages
+                withAnimation {
+                    showDetailsImageView.toggle()
+                }
+            }
+        }
+    }
+    private var detailsImageView: some View{
+        Group{
+            if showDetailsImageView{
+                ZStack{
+                    Color.black.opacity(0.7).ignoresSafeArea()
+                    if let image =  chatVM.selectedChatMessages?.imageURL, let url = URL(string: image){
+                        ImageView(imageUrl: url)
+                            .frame(height: 400)
+                            .padding(10)
+                    }
+                }
+                .onTapGesture {
+                    withAnimation {
+                        showDetailsImageView.toggle()
+                    }
+                }
+            }
         }
     }
 }
