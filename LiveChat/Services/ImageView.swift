@@ -14,7 +14,7 @@ struct ImageView: View {
         WebImage(url: imageUrl)
             .resizable()
             .placeholder{
-                Color.secondary.opacity(0.3)
+                Color.gray
             }
     }
 }

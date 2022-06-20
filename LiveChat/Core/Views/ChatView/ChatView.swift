@@ -49,17 +49,22 @@ struct ChatView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text(chatVM.selectedChatUser?.name ?? "")
-                    .font(.system(size: 17, weight: .semibold))
+                if !showDetailsImageView{
+                    Text(chatVM.selectedChatUser?.name ?? "")
+                        .font(.system(size: 17, weight: .semibold))
+                }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    showProfileView.toggle()
-                } label: {
-                    UserAvatarViewComponent(pathImage: chatVM.selectedChatUser?.profileImageUrl)
+                if !showDetailsImageView{
+                    Button {
+                        showProfileView.toggle()
+                    } label: {
+                        UserAvatarViewComponent(pathImage: chatVM.selectedChatUser?.profileImageUrl)
+                    }
                 }
             }
         }
+        .navigationBarBackButtonHidden(showDetailsImageView)
     }
 }
 
@@ -74,6 +79,18 @@ struct ChatView_Previews: PreviewProvider {
 
 extension ChatView{
     
+    
+//    private var navigationTitle: some View{
+//        Group{
+//
+//        }
+//    }
+    
+//    private var userAvatarButton: some View{
+//        Group{
+//
+//        }
+//    }
     private var chatBottomBar: some View{
         VStack(alignment: .leading, spacing: 20) {
             Divider()
@@ -93,15 +110,13 @@ extension ChatView{
                 .background(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 Button {
-                    if !chatVM.chatText.isEmpty{
-                        chatVM.sendMessage()
-                    }
+                    chatVM.sendMessage()
                 } label: {
                     Image(systemName: "paperplane.fill")
                         .font(.title3)
-                        .foregroundColor(chatVM.chatText.isEmpty ? .secondary : .blue)
+                        .foregroundColor(chatVM.isActiveSendButton ? .blue : .secondary)
                 }
-                .disabled(chatVM.chatText.isEmpty)
+                .disabled(!chatVM.isActiveSendButton)
             }
         }
         .padding(.horizontal, 15)
@@ -112,17 +127,24 @@ extension ChatView{
     private var imageViewForChatBottomBar: some View{
         Group{
             if let image = chatVM.imageData?.image{
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 100, height: 100)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                ZStack {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                    if chatVM.isLodaing{
+                        Color.black.opacity(0.2)
+                        ProgressView().tint(.white)
+                            .scaleEffect(1.5)
+                    }
+                }
+                .frame(width: 100, height: 100)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
             }
         }
         .overlay(alignment: .topTrailing) {
             Button {
                 withAnimation(.easeInOut(duration: 0.15)) {
-                    chatVM.imageData = nil
+                    chatVM.deleteImage()
                 }
             } label: {
                 Image(systemName: "xmark.circle.fill")
@@ -141,51 +163,75 @@ extension ChatView{
     
     private var messagesSection: some View{
         LazyVGrid(columns: columns, spacing: 0, pinnedViews: [.sectionHeaders]) {
-            ForEach(chatVM.mockchatMessages){
+            ForEach(chatVM.chatMessages){
                 messageRowView(messages: $0)
             }
-        }.padding(.bottom, 10)
-            .padding(.horizontal, 15)
+        }
+        .padding(.horizontal, 10)
     }
     private func messageRowView(messages: ChatMessage) -> some View{
-        Group {
+        ChatBubble(direction: messages.fromId == currentUserId ? .right : .left) {
             let isRecevied = messages.fromId == currentUserId
-            HStack {
-                VStack(alignment: .leading, spacing: 5) {
-                    if let image = messages.imageURL, let imageUrl = URL(string: image){
-                        ImageView(imageUrl: imageUrl)
-                            .frame(width: 220, height: 200)
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
+            if let image = messages.imageURL, let imageURL = URL(string: image){
+                textAndImageMessageView(messages, isRecevied: isRecevied, imageURL: imageURL)
+                .onTapGesture {
+                    chatVM.selectedChatMessages = messages
+                    withAnimation {
+                        showDetailsImageView.toggle()
                     }
-                    
-                    Text(messages.text)
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundColor(isRecevied ? .white : .black)
                 }
-                .padding(10)
-                .padding(.horizontal, 5)
-                .background(isRecevied ? Color.blue : Color.cyan.opacity(0.5))
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-                .padding(.vertical, 4)
-            }
-            .frame(maxWidth: .infinity, alignment: isRecevied ? .trailing : .leading)
-            .onTapGesture {
-                chatVM.selectedChatMessages = messages
-                withAnimation {
-                    showDetailsImageView.toggle()
-                }
+            }else{
+                textMessageView(messages, isRecevied: isRecevied)
             }
         }
+        .padding(.vertical, 4)
+    }
+    
+    private func textMessageView(_ message: ChatMessage, isRecevied: Bool) -> some View{
+            VStack(alignment: .leading, spacing: 5) {
+                Text(message.text)
+                    .font(.system(size: 14, weight: .regular))
+                    .foregroundColor(isRecevied ? .white : .black)
+            }
+            .padding(EdgeInsets.init(top: 10, leading: 15, bottom: 10, trailing: 15))
+            .background(isRecevied ? Color.blue : Color.cyan.opacity(0.5))
+    }
+    
+    private func textAndImageMessageView(_ message: ChatMessage, isRecevied: Bool, imageURL: URL) -> some View{
+        VStack(alignment: .leading, spacing: 0){
+            ImageView(imageUrl: imageURL)
+                .frame(width: 220, height: 200)
+            if !message.text.isEmpty{
+                Text(message.text)
+                    .font(.system(size: 14, weight: .regular))
+                    .foregroundColor(isRecevied ? .white : .black)
+                    .padding(EdgeInsets.init(top: 10, leading: 15, bottom: 10, trailing: 15))
+            }
+        }
+        .background(isRecevied ? Color.blue : Color.cyan.opacity(0.5))
     }
     private var detailsImageView: some View{
         Group{
             if showDetailsImageView{
-                ZStack{
-                    Color.black.opacity(0.7).ignoresSafeArea()
-                    if let image =  chatVM.selectedChatMessages?.imageURL, let url = URL(string: image){
+                VStack{
+                    if let image = chatVM.selectedChatMessages?.imageURL, let url = URL(string: image){
                         ImageView(imageUrl: url)
                             .frame(height: 400)
                             .padding(10)
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.white)
+                .toolbar{
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button {
+                            withAnimation {
+                                showDetailsImageView.toggle()
+                            }
+                        } label: {
+                            Image(systemName: "chevron.left")
+                        }
+                        .foregroundColor(.black)
                     }
                 }
                 .onTapGesture {

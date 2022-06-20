@@ -22,10 +22,18 @@ class ChatViewModel: ObservableObject{
     @Published var chatMessages = [ChatMessage]()
     @Published var imageData: ImageData?
     @Published var selectedChatMessages: ChatMessage?
+    @Published var isLodaing: Bool = false
+    
+    var uploadTask: StorageUploadTask?
     
     var firestoreListener: ListenerRegistration?
     
-    let mockchatMessages: [ChatMessage] = [ChatMessage(id: "1", fromId: "1", toId: "2", imageURL: "https://firebasestorage.googleapis.com/v0/b/live-chat-6f042.appspot.com/o/imagesChat_8aCkzc9qfCZ4LSjbgvLwYlyFhYa2ZqT9lsCoKFd9dZwcJYaQ3tuZ8nl1%2F4C84DB32-854C-4813-AE56-D69502FD9FBC.jpeg?alt=media&token=d03a696e-a70a-4973-aba1-2a99229e447f", text: "test")]
+    let mockchatMessages: [ChatMessage] = [ChatMessage(id: "1", fromId: "1", toId: "2", imageURL: "https://firebasestorage.googleapis.com/v0/b/live-chat-6f042.appspot.com/o/imagesChat_8aCkzc9qfCZ4LSjbgvLwYlyFhYa2ZqT9lsCoKFd9dZwcJYaQ3tuZ8nl1%2F4C84DB32-854C-4813-AE56-D69502FD9FBC.jpeg?alt=media&token=d03a696e-a70a-4973-aba1-2a99229e447f", text: "test"), ChatMessage(id: "2", fromId: "1", toId: "2", imageURL: "https://firebasestorage.googleapis.com/v0/b/live-chat-6f042.appspot.com/o/imagesChat_8aCkzc9qfCZ4LSjbgvLwYlyFhYa2ZqT9lsCoKFd9dZwcJYaQ3tuZ8nl1%2F4C84DB32-854C-4813-AE56-D69502FD9FBC.jpeg?alt=media&token=d03a696e-a70a-4973-aba1-2a99229e447f", text: ""), ChatMessage(id: "3", fromId: "1", toId: "2", imageURL: "", text: "Test test test")]
+    
+    
+    public var isActiveSendButton: Bool{
+       return !chatText.isEmpty || imageData != nil
+    }
     
     init(selectedChatUser: ChatUser?, currentUser: ChatUser?){
         print("init")
@@ -72,6 +80,15 @@ class ChatViewModel: ObservableObject{
             }
     }
     
+    //MARK: - Delete Image for upload
+    public func deleteImage(){
+        if isLodaing{
+            uploadTask?.cancel()
+        }
+        imageData = nil
+    }
+    
+
     
     //MARK: - SEND MESSAGES
     
@@ -81,11 +98,16 @@ class ChatViewModel: ObservableObject{
             guard let self = self else {return}
             self.createUserChats(isResiver: true)
             self.createUserChats(isResiver: false)
-            self.chatText = ""
-            self.imageData = nil
+            self.resetInputs()
         }
     }
     
+    private func resetInputs(){
+        chatText = ""
+        withAnimation(.easeInOut(duration: 0.15)){
+            imageData = nil
+        }
+    }
     
     private func createMessage(fromId: String, toId: String, completion: @escaping () -> Void){
        let path = Helpers.getRoomUid(toId: toId, fromId: fromId)
@@ -150,7 +172,7 @@ class ChatViewModel: ObservableObject{
     
     private func uploadImage(ref: StorageReference, completion: @escaping (_ url: URL?) -> Void){
         guard let imageData = Helpers.preparingImageforUpload(imageData?.image) else {return completion(nil)}
-        ref.putData(imageData, metadata: nil) { [weak self] (metadate, error) in
+        self.uploadTask = ref.putData(imageData, metadata: nil) { [weak self] (metadate, error) in
             guard let self = self else {return completion(nil)}
             if let error = error{
                 Helpers.handleError(error, title: "Failed to upload image:", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
@@ -165,6 +187,10 @@ class ChatViewModel: ObservableObject{
                 completion(url)
             }
         }
+        uploadTask?.observe(.progress) { snapshot in
+            self.isLodaing = snapshot.status == .progress
+        }
+       
     }
     
  
