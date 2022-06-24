@@ -10,6 +10,11 @@
 		5A2AC93D2852A5FA008B7741 /* RecentMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2AC93C2852A5FA008B7741 /* RecentMessages.swift */; };
 		5A558579285F792A00C59A32 /* VoiceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A558578285F792A00C59A32 /* VoiceViewModel.swift */; };
 		5A55857C285F8C4500C59A32 /* ChatBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A55857B285F8C4500C59A32 /* ChatBubble.swift */; };
+		5A5EEA9E28665F6F00623785 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5EEA9D28665F6F00623785 /* Colors.swift */; };
+		5A5EEAA02866627600623785 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A5EEA9F2866627600623785 /* Launch Screen.storyboard */; };
+		5A5EEAA2286663FB00623785 /* LaunchScrenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5EEAA1286663FB00623785 /* LaunchScrenView.swift */; };
+		5A64F1ED28608A2300E5FAF8 /* VoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A64F1EC28608A2300E5FAF8 /* VoiceView.swift */; };
+		5A64F1EF2860D0ED00E5FAF8 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A64F1EE2860D0ED00E5FAF8 /* PlayerViewModel.swift */; };
 		5A6ACEE3284B8AB100C9B49C /* MainMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6ACEE2284B8AB100C9B49C /* MainMessagesView.swift */; };
 		5A6ACEE5284B972300C9B49C /* SideBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6ACEE4284B972300C9B49C /* SideBarView.swift */; };
 		5A6ACEE7284B9ED400C9B49C /* MainMessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6ACEE6284B9ED400C9B49C /* MainMessagesViewModel.swift */; };
@@ -46,6 +51,11 @@
 		5A2AC93C2852A5FA008B7741 /* RecentMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentMessages.swift; sourceTree = "<group>"; };
 		5A558578285F792A00C59A32 /* VoiceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceViewModel.swift; sourceTree = "<group>"; };
 		5A55857B285F8C4500C59A32 /* ChatBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubble.swift; sourceTree = "<group>"; };
+		5A5EEA9D28665F6F00623785 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		5A5EEA9F2866627600623785 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		5A5EEAA1286663FB00623785 /* LaunchScrenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScrenView.swift; sourceTree = "<group>"; };
+		5A64F1EC28608A2300E5FAF8 /* VoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceView.swift; sourceTree = "<group>"; };
+		5A64F1EE2860D0ED00E5FAF8 /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
 		5A6ACEE2284B8AB100C9B49C /* MainMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMessagesView.swift; sourceTree = "<group>"; };
 		5A6ACEE4284B972300C9B49C /* SideBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarView.swift; sourceTree = "<group>"; };
 		5A6ACEE6284B9ED400C9B49C /* MainMessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMessagesViewModel.swift; sourceTree = "<group>"; };
@@ -98,9 +108,18 @@
 			path = ChatBubble;
 			sourceTree = "<group>";
 		};
+		5A5EEA9C28665F6000623785 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				5A5EEA9D28665F6F00623785 /* Colors.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		5A6ACEE8284BA0A000C9B49C /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				5A5EEA9C28665F6000623785 /* Extensions */,
 				5A6ACEE9284BA0AC00C9B49C /* Helpers.swift */,
 			);
 			path = Utils;
@@ -158,6 +177,7 @@
 				5AE740B22846A5EA0001893B /* GoogleService-Info.plist */,
 				5AE740A328469AD20001893B /* Assets.xcassets */,
 				5AE740A528469AD20001893B /* Preview Content */,
+				5A5EEA9F2866627600623785 /* Launch Screen.storyboard */,
 			);
 			path = LiveChat;
 			sourceTree = "<group>";
@@ -173,12 +193,14 @@
 		5AE740B42846A74F0001893B /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5A5EEAA1286663FB00623785 /* LaunchScrenView.swift */,
 				5A838B7F2856524C000B0603 /* UserProfile */,
 				5AFA5FA6284C258D0072B57E /* ChatView */,
 				5AFA5FA1284C01120072B57E /* CreateNewMessageView */,
 				5AFA5FA0284C01000072B57E /* MainChatsView */,
 				5AFA5F9F284C00F90072B57E /* Login */,
 				5A6ACEF4284BDA8100C9B49C /* StartView.swift */,
+				5A64F1EC28608A2300E5FAF8 /* VoiceView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -193,6 +215,7 @@
 				5AFA5FA4284C1D1D0072B57E /* ChatViewModel.swift */,
 				5A838B8028565266000B0603 /* UserProfileViewModel.swift */,
 				5A558578285F792A00C59A32 /* VoiceViewModel.swift */,
+				5A64F1EE2860D0ED00E5FAF8 /* PlayerViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -340,6 +363,7 @@
 			files = (
 				5AE740A728469AD20001893B /* Preview Assets.xcassets in Resources */,
 				5AE740A428469AD20001893B /* Assets.xcassets in Resources */,
+				5A5EEAA02866627600623785 /* Launch Screen.storyboard in Resources */,
 				5AE740B32846A5EB0001893B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -360,12 +384,15 @@
 				5AFA5FAB284C266A0072B57E /* ReversedScrollView.swift in Sources */,
 				5AE740A228469AD00001893B /* LoginView.swift in Sources */,
 				5A6ACEF5284BDA8100C9B49C /* StartView.swift in Sources */,
+				5A64F1EF2860D0ED00E5FAF8 /* PlayerViewModel.swift in Sources */,
 				5A838B7E28565242000B0603 /* UserProfileView.swift in Sources */,
 				5A558579285F792A00C59A32 /* VoiceViewModel.swift in Sources */,
 				5A6ACEF9284BF0B900C9B49C /* UserAvatarViewComponent.swift in Sources */,
 				5AE740BF2846AF2F0001893B /* ImagePicker.swift in Sources */,
+				5A64F1ED28608A2300E5FAF8 /* VoiceView.swift in Sources */,
 				5A838B7C28563AD5000B0603 /* UserManagerViewModel.swift in Sources */,
 				5A6ACEF3284BB68300C9B49C /* ImageView.swift in Sources */,
+				5A5EEA9E28665F6F00623785 /* Colors.swift in Sources */,
 				5A6ACEEC284BA7B300C9B49C /* ChatUser.swift in Sources */,
 				5A6ACEEA284BA0AC00C9B49C /* Helpers.swift in Sources */,
 				5AFA5FA5284C1D1D0072B57E /* ChatViewModel.swift in Sources */,
@@ -373,6 +400,7 @@
 				5AFA5FA8284C259A0072B57E /* ChatView.swift in Sources */,
 				5AE740A028469AD00001893B /* LiveChatApp.swift in Sources */,
 				5AFA5FAD284D12530072B57E /* ChatMessage.swift in Sources */,
+				5A5EEAA2286663FB00623785 /* LaunchScrenView.swift in Sources */,
 				5A6ACEE5284B972300C9B49C /* SideBarView.swift in Sources */,
 				5AE740BB2846A7A20001893B /* LoginViewModel.swift in Sources */,
 				5A6ACEE7284B9ED400C9B49C /* MainMessagesViewModel.swift in Sources */,
@@ -509,9 +537,11 @@
 				DEVELOPMENT_TEAM = 92PU6D6MCQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone to conduct recording sessions";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -538,9 +568,11 @@
 				DEVELOPMENT_TEAM = 92PU6D6MCQ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone to conduct recording sessions";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (

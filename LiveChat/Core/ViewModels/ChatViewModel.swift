@@ -103,7 +103,9 @@ class ChatViewModel: ObservableObject{
     }
     
     private func resetInputs(){
+        print(chatText)
         chatText = ""
+        print(chatText)
         withAnimation(.easeInOut(duration: 0.15)){
             imageData = nil
         }

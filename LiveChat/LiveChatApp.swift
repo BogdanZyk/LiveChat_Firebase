@@ -13,6 +13,7 @@ struct LiveChatApp: App {
     var body: some Scene {
         WindowGroup {
             StartView()
+                .preferredColorScheme(.light)
         }
     }
 }

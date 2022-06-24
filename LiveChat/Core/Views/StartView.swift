@@ -9,13 +9,20 @@ import SwiftUI
 
 struct StartView: View {
     @StateObject private var loginVM = LoginViewModel()
+    @State private var isActive: Bool = false
     var body: some View {
         Group{
-            if loginVM.isloggedUser{
-                MainMessagesView()
+            
+            if isActive{
+                if loginVM.isloggedUser{
+                    //VoiceView()
+                    MainMessagesView()
+                }else{
+                    LoginView()
+                        
+                }
             }else{
-                LoginView()
-                    
+                LaunchScrenView(isActive: $isActive)
             }
         }
         .environmentObject(loginVM)
