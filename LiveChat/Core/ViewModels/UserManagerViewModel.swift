@@ -12,7 +12,7 @@ class UserManagerViewModel: ObservableObject{
     
     @Published var errorMessage = ""
     @Published var showAlert: Bool = false
-    @Published var currentUser: ChatUser?
+    @Published var currentUser: User?
     
     init(){
         fetchCurrentUser()

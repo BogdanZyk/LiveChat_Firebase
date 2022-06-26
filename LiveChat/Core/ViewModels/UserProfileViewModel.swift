@@ -13,7 +13,7 @@ class UserProfileViewModel: ObservableObject {
     let userId: String?
     @Published var errorMessage = ""
     @Published var showAlert: Bool = false
-    @Published var profileUser: ChatUser?
+    @Published var profileUser: User?
     
     init(userId: String?){
         self.userId = userId

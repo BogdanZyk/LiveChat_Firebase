@@ -10,11 +10,11 @@ import Combine
 
 class CreateNewMessageViewModel: ObservableObject{
     
-    @Published var users = [ChatUser]()
+    @Published var users = [User]()
     @Published var errorMessage = ""
     @Published var showAlert: Bool = false
     @Published var searchText: String = ""
-    @Published var searchResult = [ChatUser]()
+    @Published var searchResult = [User]()
     
     var cancellable = Set<AnyCancellable>()
     
@@ -43,8 +43,12 @@ class CreateNewMessageViewModel: ObservableObject{
                 guard let self = self else {return}
                 self.handleError(error, title: "Failed to fetch users")
                 documentSnapshot?.documents.forEach({ snapshot in
-                    guard let userData = Helpers.decodeUserData(snapshot) else {return}
-                    self.users.append(userData)
+                    do{
+                    let user = try snapshot.data(as: User.self)
+                        self.users.append(user)
+                    }catch{
+                        self.handleError(error, title: "Failed to decode user data")
+                    }
                 })
             }
     }

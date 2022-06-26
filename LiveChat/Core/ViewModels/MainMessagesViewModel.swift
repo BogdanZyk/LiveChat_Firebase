@@ -14,7 +14,7 @@ class MainMessagesViewModel: ObservableObject{
     
     @Published var errorMessage = ""
     @Published var showAlert: Bool = false
-    @Published var selectedChatUser: ChatUser?
+    @Published var selectedChatUser: User?
     @Published var recentMessages = [RecentMessages]()
     private var firestoreListener: ListenerRegistration?
     

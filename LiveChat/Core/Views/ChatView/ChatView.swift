@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct ChatView: View {
-    let selectedChatUser: ChatUser?
+    let selectedChatUser: User?
     @StateObject private var chatVM: ChatViewModel
     let columns = [GridItem(.flexible(minimum: 10))]
     let currentUserId = FirebaseManager.shared.auth.currentUser?.uid ?? ""
-    init(selectedChatUser: ChatUser?, currentUser: ChatUser?){
+    init(selectedChatUser: User?, currentUser: User?){
         self.selectedChatUser = selectedChatUser
         self._chatVM = StateObject.init(wrappedValue: ChatViewModel(selectedChatUser: selectedChatUser, currentUser: currentUser))
     }
@@ -68,13 +68,13 @@ struct ChatView: View {
     }
 }
 
-struct ChatView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            ChatView(selectedChatUser: ChatUser(uid: "1", email: "test@test.com", profileImageUrl: "", name: "tester"), currentUser: ChatUser(uid: "2", email: "test2@test.com", profileImageUrl: "", name: "tester2"))
-        }
-    }
-}
+//struct ChatView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            ChatView(selectedChatUser: User(uid: "1", email: "test@test.com", profileImageUrl: "", name: "tester"), currentUser: User(uid: "2", email: "test2@test.com", profileImageUrl: "", name: "tester2"))
+//        }
+//    }
+//}
 
 
 extension ChatView{
@@ -169,7 +169,7 @@ extension ChatView{
         }
         .padding(.horizontal, 10)
     }
-    private func messageRowView(messages: ChatMessage) -> some View{
+    private func messageRowView(messages: Message) -> some View{
         ChatBubble(direction: messages.fromId == currentUserId ? .right : .left) {
             let isRecevied = messages.fromId == currentUserId
             if let image = messages.imageURL, let imageURL = URL(string: image){
@@ -187,7 +187,7 @@ extension ChatView{
         .padding(.vertical, 4)
     }
     
-    private func textMessageView(_ message: ChatMessage, isRecevied: Bool) -> some View{
+    private func textMessageView(_ message: Message, isRecevied: Bool) -> some View{
             VStack(alignment: .leading, spacing: 5) {
                 Text(message.text)
                     .font(.system(size: 14, weight: .regular))
@@ -197,7 +197,7 @@ extension ChatView{
             .background(isRecevied ? Color.blue : Color.cyan.opacity(0.5))
     }
     
-    private func textAndImageMessageView(_ message: ChatMessage, isRecevied: Bool, imageURL: URL) -> some View{
+    private func textAndImageMessageView(_ message: Message, isRecevied: Bool, imageURL: URL) -> some View{
         VStack(alignment: .leading, spacing: 0){
             ImageView(imageUrl: imageURL)
                 .frame(width: 220, height: 200)

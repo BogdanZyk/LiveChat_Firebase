@@ -15,27 +15,27 @@ class ChatViewModel: ObservableObject{
     
     @Published var errorMessage = ""
     @Published var showAlert: Bool = false
-    @Published var selectedChatUser: ChatUser?
-    @Published var currentUser: ChatUser?
+    @Published var selectedChatUser: User?
+    @Published var currentUser: User?
     @Published var chatText: String = ""
     @Published var messageReceive: Int = 0
-    @Published var chatMessages = [ChatMessage]()
+    @Published var chatMessages = [Message]()
     @Published var imageData: ImageData?
-    @Published var selectedChatMessages: ChatMessage?
+    @Published var selectedChatMessages: Message?
     @Published var isLodaing: Bool = false
     
     var uploadTask: StorageUploadTask?
     
     var firestoreListener: ListenerRegistration?
     
-    let mockchatMessages: [ChatMessage] = [ChatMessage(id: "1", fromId: "1", toId: "2", imageURL: "https://firebasestorage.googleapis.com/v0/b/live-chat-6f042.appspot.com/o/imagesChat_8aCkzc9qfCZ4LSjbgvLwYlyFhYa2ZqT9lsCoKFd9dZwcJYaQ3tuZ8nl1%2F4C84DB32-854C-4813-AE56-D69502FD9FBC.jpeg?alt=media&token=d03a696e-a70a-4973-aba1-2a99229e447f", text: "test"), ChatMessage(id: "2", fromId: "1", toId: "2", imageURL: "https://firebasestorage.googleapis.com/v0/b/live-chat-6f042.appspot.com/o/imagesChat_8aCkzc9qfCZ4LSjbgvLwYlyFhYa2ZqT9lsCoKFd9dZwcJYaQ3tuZ8nl1%2F4C84DB32-854C-4813-AE56-D69502FD9FBC.jpeg?alt=media&token=d03a696e-a70a-4973-aba1-2a99229e447f", text: ""), ChatMessage(id: "3", fromId: "1", toId: "2", imageURL: "", text: "Test test test")]
+    let mockchatMessages: [Message] = [Message(id: "1", fromId: "1", toId: "2", imageURL: "https://firebasestorage.googleapis.com/v0/b/live-chat-6f042.appspot.com/o/imagesChat_8aCkzc9qfCZ4LSjbgvLwYlyFhYa2ZqT9lsCoKFd9dZwcJYaQ3tuZ8nl1%2F4C84DB32-854C-4813-AE56-D69502FD9FBC.jpeg?alt=media&token=d03a696e-a70a-4973-aba1-2a99229e447f", text: "test"), Message(id: "2", fromId: "1", toId: "2", imageURL: "https://firebasestorage.googleapis.com/v0/b/live-chat-6f042.appspot.com/o/imagesChat_8aCkzc9qfCZ4LSjbgvLwYlyFhYa2ZqT9lsCoKFd9dZwcJYaQ3tuZ8nl1%2F4C84DB32-854C-4813-AE56-D69502FD9FBC.jpeg?alt=media&token=d03a696e-a70a-4973-aba1-2a99229e447f", text: ""), Message(id: "3", fromId: "1", toId: "2", imageURL: "", text: "Test test test")]
     
     
     public var isActiveSendButton: Bool{
        return !chatText.isEmpty || imageData != nil
     }
     
-    init(selectedChatUser: ChatUser?, currentUser: ChatUser?){
+    init(selectedChatUser: User?, currentUser: User?){
         print("init")
         self.currentUser = currentUser
         self.selectedChatUser = selectedChatUser
@@ -66,7 +66,7 @@ class ChatViewModel: ObservableObject{
                 shapshot?.documentChanges.forEach({ change in
                     if change.type == .added{
                         do{
-                            let message = try change.document.data(as: ChatMessage.self)
+                            let message = try change.document.data(as: Message.self)
                             self.chatMessages.append(message)
                             print("add new message now ->>>>>>>>>")
                         }catch{

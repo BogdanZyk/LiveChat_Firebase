@@ -81,28 +81,32 @@ class LoginViewModel: ObservableObject{
     private func persistUserInfoToStorage(completion: @escaping () -> Void){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         let ref = FirebaseManager.shared.storage.reference(withPath: uid)
-        let imageUrl = uploadImage(ref: ref)
+        let imageUrl = uploadUserAvatarImage(ref: ref)
         storeUserInformation(imageUrl, completion: completion)
         
     }
     
     private func storeUserInformation(_ profileImageUrl: URL?, completion: @escaping () -> Void){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
-        let userDate = ["uid": uid, "email": email, FBConstant.profileImageUrl: profileImageUrl?.absoluteString ?? "", FBConstant.name: userName]
-        FirebaseManager.shared.firestore.collection("users")
-            .document(uid).setData(userDate) { [weak self] (error) in
-                guard let self = self else {return}
-                if let err = error{
-                    self.handleError(err, title: "")
-                    return
-                }
-                completion()
-            }
+        let user = User(uid: uid, email: email, profileImageUrl: profileImageUrl?.absoluteString ?? "", name: userName)
+        do {
+            try  FirebaseManager.shared.firestore.collection("users")
+                .document(uid).setData(from: user, completion: { error in
+                    if let error = error{
+                        self.handleError(error, title: "Filed to set user data")
+                        return
+                    }
+                    completion()
+                })
+        } catch {
+            handleError(error, title: "Filed to set user data")
+        }
+       
     }
     
 
     
-    private func uploadImage(ref: StorageReference) -> URL?{
+    private func uploadUserAvatarImage(ref: StorageReference) -> URL?{
         var returnUrl: URL?
         guard let imageData = Helpers.preparingImageforUpload(imageData?.image) else {return nil}
         ref.putData(imageData, metadata: nil) { [weak self] (metadate, error) in

@@ -19,10 +19,10 @@ final class Helpers{
         }
     }
     
-    static func decodeUserData(_ snapshot: DocumentSnapshot?) -> ChatUser?{
+    static func decodeUserData(_ snapshot: DocumentSnapshot?) -> User?{
         guard let data = snapshot?.data() else {return nil}
         guard let jsonData = try? JSONSerialization.data(withJSONObject: data) else{return nil}
-        return try? JSONDecoder().decode(ChatUser.self, from: jsonData)
+        return try? JSONDecoder().decode(User.self, from: jsonData)
     }
     
     static func getRoomUid(toId: String, fromId: String) -> String{

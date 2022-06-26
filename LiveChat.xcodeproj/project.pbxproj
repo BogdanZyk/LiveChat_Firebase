@@ -26,11 +26,13 @@
 		5A6ACEE5284B972300C9B49C /* SideBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6ACEE4284B972300C9B49C /* SideBarView.swift */; };
 		5A6ACEE7284B9ED400C9B49C /* MainMessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6ACEE6284B9ED400C9B49C /* MainMessagesViewModel.swift */; };
 		5A6ACEEA284BA0AC00C9B49C /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6ACEE9284BA0AC00C9B49C /* Helpers.swift */; };
-		5A6ACEEC284BA7B300C9B49C /* ChatUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6ACEEB284BA7B300C9B49C /* ChatUser.swift */; };
+		5A6ACEEC284BA7B300C9B49C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6ACEEB284BA7B300C9B49C /* User.swift */; };
 		5A6ACEEF284BB0B900C9B49C /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 5A6ACEEE284BB0B900C9B49C /* SDWebImageSwiftUI */; };
 		5A6ACEF3284BB68300C9B49C /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6ACEF2284BB68300C9B49C /* ImageView.swift */; };
 		5A6ACEF5284BDA8100C9B49C /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6ACEF4284BDA8100C9B49C /* StartView.swift */; };
 		5A6ACEF9284BF0B900C9B49C /* UserAvatarViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6ACEF8284BF0B900C9B49C /* UserAvatarViewComponent.swift */; };
+		5A75B3722868CF3E0037AD74 /* TestMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A75B3712868CF3E0037AD74 /* TestMessage.swift */; };
+		5A75B3742868D0DC0037AD74 /* TestDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A75B3732868D0DC0037AD74 /* TestDataViewModel.swift */; };
 		5A838B7C28563AD5000B0603 /* UserManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A838B7B28563AD4000B0603 /* UserManagerViewModel.swift */; };
 		5A838B7E28565242000B0603 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A838B7D28565242000B0603 /* UserProfileView.swift */; };
 		5A838B8128565266000B0603 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A838B8028565266000B0603 /* UserProfileViewModel.swift */; };
@@ -51,7 +53,7 @@
 		5AFA5FA5284C1D1D0072B57E /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FA4284C1D1D0072B57E /* ChatViewModel.swift */; };
 		5AFA5FA8284C259A0072B57E /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FA7284C259A0072B57E /* ChatView.swift */; };
 		5AFA5FAB284C266A0072B57E /* ReversedScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FAA284C266A0072B57E /* ReversedScrollView.swift */; };
-		5AFA5FAD284D12530072B57E /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FAC284D12520072B57E /* ChatMessage.swift */; };
+		5AFA5FAD284D12530072B57E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FAC284D12520072B57E /* Message.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,10 +79,12 @@
 		5A6ACEE4284B972300C9B49C /* SideBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarView.swift; sourceTree = "<group>"; };
 		5A6ACEE6284B9ED400C9B49C /* MainMessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMessagesViewModel.swift; sourceTree = "<group>"; };
 		5A6ACEE9284BA0AC00C9B49C /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
-		5A6ACEEB284BA7B300C9B49C /* ChatUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUser.swift; sourceTree = "<group>"; };
+		5A6ACEEB284BA7B300C9B49C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5A6ACEF2284BB68300C9B49C /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		5A6ACEF4284BDA8100C9B49C /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
 		5A6ACEF8284BF0B900C9B49C /* UserAvatarViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAvatarViewComponent.swift; sourceTree = "<group>"; };
+		5A75B3712868CF3E0037AD74 /* TestMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMessage.swift; sourceTree = "<group>"; };
+		5A75B3732868D0DC0037AD74 /* TestDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDataViewModel.swift; sourceTree = "<group>"; };
 		5A838B7B28563AD4000B0603 /* UserManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagerViewModel.swift; sourceTree = "<group>"; };
 		5A838B7D28565242000B0603 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		5A838B8028565266000B0603 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
@@ -98,7 +102,7 @@
 		5AFA5FA4284C1D1D0072B57E /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		5AFA5FA7284C259A0072B57E /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		5AFA5FAA284C266A0072B57E /* ReversedScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversedScrollView.swift; sourceTree = "<group>"; };
-		5AFA5FAC284D12520072B57E /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		5AFA5FAC284D12520072B57E /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -291,6 +295,7 @@
 				5A838B8028565266000B0603 /* UserProfileViewModel.swift */,
 				5A558578285F792A00C59A32 /* VoiceViewModel.swift */,
 				5A64F1EE2860D0ED00E5FAF8 /* PlayerViewModel.swift */,
+				5A75B3732868D0DC0037AD74 /* TestDataViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -319,9 +324,10 @@
 		5AE740B82846A7770001893B /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				5A6ACEEB284BA7B300C9B49C /* ChatUser.swift */,
-				5AFA5FAC284D12520072B57E /* ChatMessage.swift */,
+				5A6ACEEB284BA7B300C9B49C /* User.swift */,
+				5AFA5FAC284D12520072B57E /* Message.swift */,
 				5A2AC93C2852A5FA008B7741 /* RecentMessages.swift */,
+				5A75B3712868CF3E0037AD74 /* TestMessage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -475,14 +481,16 @@
 				5A5EEA9E28665F6F00623785 /* Colors.swift in Sources */,
 				5A5EEAB22866755000623785 /* View.swift in Sources */,
 				5A5EEAAD28666DA100623785 /* CustomIconsView.swift in Sources */,
-				5A6ACEEC284BA7B300C9B49C /* ChatUser.swift in Sources */,
+				5A6ACEEC284BA7B300C9B49C /* User.swift in Sources */,
 				5A6ACEEA284BA0AC00C9B49C /* Helpers.swift in Sources */,
 				5AFA5FA5284C1D1D0072B57E /* ChatViewModel.swift in Sources */,
+				5A75B3722868CF3E0037AD74 /* TestMessage.swift in Sources */,
 				5AFA5F9E284BF9200072B57E /* CreateNewMessageView.swift in Sources */,
 				5AFA5FA8284C259A0072B57E /* ChatView.swift in Sources */,
 				5AE740A028469AD00001893B /* LiveChatApp.swift in Sources */,
-				5AFA5FAD284D12530072B57E /* ChatMessage.swift in Sources */,
+				5AFA5FAD284D12530072B57E /* Message.swift in Sources */,
 				5A5EEAA2286663FB00623785 /* LaunchScrenView.swift in Sources */,
+				5A75B3742868D0DC0037AD74 /* TestDataViewModel.swift in Sources */,
 				5A6ACEE5284B972300C9B49C /* SideBarView.swift in Sources */,
 				5AE740BB2846A7A20001893B /* LoginViewModel.swift in Sources */,
 				5A6ACEE7284B9ED400C9B49C /* MainMessagesViewModel.swift in Sources */,

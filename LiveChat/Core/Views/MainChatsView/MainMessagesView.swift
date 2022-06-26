@@ -10,6 +10,7 @@ import SwiftUI
 struct MainMessagesView: View {
     @EnvironmentObject private var loginVM: LoginViewModel
     @StateObject private var mainMessVM = MainMessagesViewModel()
+    @StateObject private var testVM = TestDataViewModel()
     @StateObject private var userVM = UserManagerViewModel()
     @State private var showSideBarView: Bool = false
     @State private var showNewMessageView: Bool = false
@@ -20,6 +21,20 @@ struct MainMessagesView: View {
 
             VStack(spacing: 0) {
                 searchChatTextFieldView
+                HStack {
+                    Button {
+                        testVM.createTestMessage()
+                    } label: {
+                        Text("Create mess")
+                    }
+                    Button {
+                        testVM.fetchTestMessage()
+                    } label: {
+                        Text("fetch mess")
+                    }
+                    Text(testVM.messages?.text ?? "")
+                }
+
                 List{
                     chatRowSection
                 }
@@ -146,7 +161,7 @@ extension MainMessagesView{
     
     private func chatRowView(_ resentMessage: RecentMessages) -> some View{
         Button {
-            mainMessVM.selectedChatUser = ChatUser(uid: resentMessage.toId, email: "", profileImageUrl: resentMessage.profileImageUrl, name: resentMessage.name)
+            mainMessVM.selectedChatUser = User(uid: resentMessage.toId, email: "", profileImageUrl: resentMessage.profileImageUrl, name: resentMessage.name)
             showChatView.toggle()
         } label: {
             HStack(spacing: 20){

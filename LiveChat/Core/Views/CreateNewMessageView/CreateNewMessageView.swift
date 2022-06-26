@@ -10,7 +10,7 @@ import SwiftUI
 struct CreateNewMessageView: View {
     @Environment(\.self) var env
     @Binding var showChatView: Bool
-    @Binding var selectedChatUser: ChatUser?
+    @Binding var selectedChatUser: User?
     @StateObject private var createMessVM = CreateNewMessageViewModel()
     var body: some View {
         NavigationView {
@@ -38,11 +38,11 @@ struct CreateNewMessageView: View {
     }
 }
 
-struct CreateNewMessageView_Previews: PreviewProvider {
-    static var previews: some View {
-        CreateNewMessageView(showChatView: .constant(true), selectedChatUser: .constant(ChatUser(uid: "1", email: "", profileImageUrl: "", name: "")))
-    }
-}
+//struct CreateNewMessageView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CreateNewMessageView(showChatView: .constant(true), selectedChatUser: .constant(User(uid: "1", email: "", profileImageUrl: "", name: "")))
+//    }
+//}
 
 
 extension CreateNewMessageView{
@@ -60,7 +60,7 @@ extension CreateNewMessageView{
             Text("Cancel")
         }
     }
-    private func userRowView(_ user: ChatUser) -> some View{
+    private func userRowView(_ user: User) -> some View{
         Button {
             selectedChatUser = user
             showChatView.toggle()
