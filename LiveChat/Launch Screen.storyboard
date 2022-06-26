@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="eSL-0T-kAv">
-                                <rect key="frame" x="128" y="340" width="150" height="200"/>
+                                <rect key="frame" x="120" y="323" width="150" height="200"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="200" id="LJk-Zf-509"/>
                                     <constraint firstAttribute="width" constant="150" id="YoF-20-ZeI"/>

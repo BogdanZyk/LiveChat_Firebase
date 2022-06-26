@@ -16,7 +16,8 @@ struct StartView: View {
             if isActive{
                 if loginVM.isloggedUser{
                     //VoiceView()
-                    MainMessagesView()
+                    MainView()
+                        .environmentObject(loginVM)
                 }else{
                     LoginView()
                         

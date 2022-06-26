@@ -14,51 +14,43 @@ struct MainMessagesView: View {
     @State private var showSideBarView: Bool = false
     @State private var showNewMessageView: Bool = false
     @State private var showChatView: Bool = false
+    @State private var searchText: String = ""
+    @FocusState var isSearchFocused: Bool
     var body: some View {
-        NavigationView{
+
             VStack(spacing: 0) {
-//                ScrollView(.horizontal, showsIndicators: false){
-//                    HStack{
-//                        ForEach(mainMessVM.recentMessages){ resentMessage in
-//                            UserAvatarViewComponent(pathImage: resentMessage.profileImageUrl, size: .init(width: 40, height: 40))
-//                        }
-//                    }
-//                    .padding(.leading, 20)
-//                }
-//
+                searchChatTextFieldView
                 List{
                     chatRowSection
                 }
                 .listStyle(.plain)
                 
-                
-                userSettingNavigationLink
+                //userSettingNavigationLink
                 chatViewNavigationLink
-                
             }
-            .overlay(alignment: .bottomTrailing){
-                newMessageButton
-            }
+            .foregroundColor(.fontPrimary)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    prorileAvatarNavView
+                    navigationTile
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    navActionButton
+                    newMessageBtn
                 }
             }
             .sheet(isPresented: $showNewMessageView) {
                 CreateNewMessageView(showChatView: $showChatView, selectedChatUser: $mainMessVM.selectedChatUser)
             }
-        }
+        
     }
 }
 
 struct MainMessagesView_Previews: PreviewProvider {
     static var previews: some View {
-        MainMessagesView()
-            .environmentObject(LoginViewModel())
+        NavigationView {
+            MainMessagesView()
+                .environmentObject(LoginViewModel())
+        }
 //            .preferredColorScheme(.dark)
     }
 }
@@ -66,29 +58,64 @@ struct MainMessagesView_Previews: PreviewProvider {
 extension MainMessagesView{
     
     
-    //MARK: - navbar
-    private var prorileAvatarNavView: some View{
-        HStack {
-            UserAvatarViewComponent(pathImage: userVM.currentUser?.profileImageUrl)
-            VStack(alignment: .leading, spacing: 2){
-                Text("Hey!")
-                    .font(.caption)
-                Text(userVM.currentUser?.name ?? "")
-                    .font(.system(size: 14, weight: .semibold))
-            }
+    private var navigationTile: some View{
+        Text("Chatroom")
+            .font(.urbMedium(size: 24))
+            .foregroundColor(.fontPrimary)
+    }
+    private var newMessageBtn: some View{
+        Button {
+            showNewMessageView.toggle()
+        } label: {
+            CustomIconView(imageName: "create", width: 23, height: 23, color: .accentBlue, opacity: 1)
         }
-        .padding(.leading, 5)
+
     }
     
-    private var userSettingNavigationLink: some View{
-        Group{
-            NavigationLink(isActive: $showSideBarView) {
-                SideBarView(loginVM: loginVM)
-            } label: {
-                EmptyView()
+    private var searchChatTextFieldView: some View{
+        HStack {
+            TextFieldViewComponent(text: $searchText, promt: "Search your chat here", font: .urbRegular(size: 18), height: 50, cornerRadius: 20)
+                .focused($isSearchFocused)
+            if isSearchFocused{
+                Button {
+                    searchText = ""
+                    withAnimation{
+                        isSearchFocused = false
+                    }
+                } label: {
+                    Text("Cancel")
+                        .font(.urbRegular(size: 16))
+                        .foregroundColor(.accentBlue)
+                }
             }
         }
+        .animation(.easeInOut, value: isSearchFocused)
+        .padding(.top, 10)
+        .padding(.horizontal, 15)
     }
+//    //MARK: - navbar
+//    private var prorileAvatarNavView: some View{
+//        HStack {
+//            UserAvatarViewComponent(pathImage: userVM.currentUser?.profileImageUrl)
+//            VStack(alignment: .leading, spacing: 2){
+//                Text("Hey!")
+//                    .font(.caption)
+//                Text(userVM.currentUser?.name ?? "")
+//                    .font(.system(size: 14, weight: .semibold))
+//            }
+//        }
+//        .padding(.leading, 5)
+//    }
+//
+//    private var userSettingNavigationLink: some View{
+//        Group{
+//            NavigationLink(isActive: $showSideBarView) {
+//                SideBarView(loginVM: loginVM)
+//            } label: {
+//                EmptyView()
+//            }
+//        }
+//    }
     
     private var chatViewNavigationLink: some View{
         Group{
@@ -122,20 +149,24 @@ extension MainMessagesView{
             mainMessVM.selectedChatUser = ChatUser(uid: resentMessage.toId, email: "", profileImageUrl: resentMessage.profileImageUrl, name: resentMessage.name)
             showChatView.toggle()
         } label: {
-            HStack(spacing: 15){
+            HStack(spacing: 20){
                 UserAvatarViewComponent(pathImage: resentMessage.profileImageUrl, size: .init(width: 55, height: 55))
-                VStack(alignment: .leading, spacing: 8){
-                    Text(resentMessage.name)
-                        .font(.system(size: 16, weight: .bold))
+                VStack(alignment: .leading, spacing: 6){
+                    HStack {
+                        Text(resentMessage.name)
+                            .font(.urbMedium(size: 16))
+                        Spacer()
+                        Text(resentMessage.timeAgo)
+                            .font(.urbMedium(size: 12))
+                            .foregroundColor(.gray)
+                    }
                     Text(resentMessage.text)
-                        .font(.system(size: 14))
-                        .foregroundColor(.secondary)
+                        .font(.urbMedium(size: 14))
+                        .foregroundColor(.gray)
                 }
                 .lineLimit(1)
-                Spacer()
-                Text(resentMessage.timeAgo)
-                    .font(.system(size: 14, weight: .semibold))
             }
+            .padding(.vertical, 4)
             
        }
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -146,26 +177,15 @@ extension MainMessagesView{
     }
     
     private var chatRowSection: some View{
-        ForEach(mainMessVM.recentMessages){ resentMessage in
-            chatRowView(resentMessage)
+        Group {
+            Text("Recent")
+                .font(.urbMedium(size: 18))
+            ForEach(mainMessVM.recentMessages){ resentMessage in
+                chatRowView(resentMessage)
+            }
         }
+        .listRowSeparator(.hidden)
     }
     
-    private var newMessageButton: some View{
-        Button {
-            showNewMessageView.toggle()
-        } label: {
-            ZStack{
-                Color.blue
-                Image(systemName: "message.fill")
-                    .foregroundColor(.white)
-                    .font(.system(size: 18))
-            }
-            .frame(width: 60, height: 60)
-            .clipShape(Circle())
-        }
-        .frame(maxWidth: .infinity, alignment: .trailing)
-        .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 0)
-        .padding()
-    }
+
 }
