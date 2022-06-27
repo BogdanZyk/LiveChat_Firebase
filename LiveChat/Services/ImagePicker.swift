@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ImagePicker: UIViewControllerRepresentable{
     
-    @Binding var imageData: ImageData?
+    @Binding var imageData: UIImageData?
     
     private let controller = UIImagePickerController()
     
@@ -30,7 +30,7 @@ struct ImagePicker: UIViewControllerRepresentable{
                 imageName = url.lastPathComponent
             }
             let image = info[.originalImage] as? UIImage
-            parent.imageData = ImageData(image: image, imageName: imageName)
+            parent.imageData = UIImageData(image: image, imageName: imageName)
             picker.dismiss(animated: true)
         }
         
@@ -44,7 +44,7 @@ struct ImagePicker: UIViewControllerRepresentable{
     }
 }
 
-struct ImageData{
+struct UIImageData{
     var image: UIImage?
     var imageName: String?
 }

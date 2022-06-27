@@ -20,7 +20,7 @@ class ChatViewModel: ObservableObject{
     @Published var chatText: String = ""
     @Published var messageReceive: Int = 0
     @Published var chatMessages = [Message]()
-    @Published var imageData: ImageData?
+    @Published var imageData: UIImageData?
     @Published var selectedChatMessages: Message?
     @Published var isLodaing: Bool = false
     
@@ -28,7 +28,7 @@ class ChatViewModel: ObservableObject{
     
     var firestoreListener: ListenerRegistration?
     
-    let mockchatMessages: [Message] = [Message(id: "1", fromId: "1", toId: "2", imageURL: "https://firebasestorage.googleapis.com/v0/b/live-chat-6f042.appspot.com/o/imagesChat_8aCkzc9qfCZ4LSjbgvLwYlyFhYa2ZqT9lsCoKFd9dZwcJYaQ3tuZ8nl1%2F4C84DB32-854C-4813-AE56-D69502FD9FBC.jpeg?alt=media&token=d03a696e-a70a-4973-aba1-2a99229e447f", text: "test"), Message(id: "2", fromId: "1", toId: "2", imageURL: "https://firebasestorage.googleapis.com/v0/b/live-chat-6f042.appspot.com/o/imagesChat_8aCkzc9qfCZ4LSjbgvLwYlyFhYa2ZqT9lsCoKFd9dZwcJYaQ3tuZ8nl1%2F4C84DB32-854C-4813-AE56-D69502FD9FBC.jpeg?alt=media&token=d03a696e-a70a-4973-aba1-2a99229e447f", text: ""), Message(id: "3", fromId: "1", toId: "2", imageURL: "", text: "Test test test")]
+//    let mockchatMessages: [Message] = [Message(id: "1", fromId: "1", toId: "2", imageURL: "https://firebasestorage.googleapis.com/v0/b/live-chat-6f042.appspot.com/o/imagesChat_8aCkzc9qfCZ4LSjbgvLwYlyFhYa2ZqT9lsCoKFd9dZwcJYaQ3tuZ8nl1%2F4C84DB32-854C-4813-AE56-D69502FD9FBC.jpeg?alt=media&token=d03a696e-a70a-4973-aba1-2a99229e447f", text: "test"), Message(id: "2", fromId: "1", toId: "2", imageURL: "https://firebasestorage.googleapis.com/v0/b/live-chat-6f042.appspot.com/o/imagesChat_8aCkzc9qfCZ4LSjbgvLwYlyFhYa2ZqT9lsCoKFd9dZwcJYaQ3tuZ8nl1%2F4C84DB32-854C-4813-AE56-D69502FD9FBC.jpeg?alt=media&token=d03a696e-a70a-4973-aba1-2a99229e447f", text: ""), Message(id: "3", fromId: "1", toId: "2", imageURL: "", text: "Test test test")]
     
     
     public var isActiveSendButton: Bool{
@@ -52,7 +52,7 @@ class ChatViewModel: ObservableObject{
      func fetchMessages(){
         guard let fromId = FirebaseManager.shared.auth.currentUser?.uid, let toId = selectedChatUser?.uid else {return}
          let room = Helpers.getRoomUid(toId: toId, fromId: fromId)
-        firestoreListener = FirebaseManager.shared.firestore
+        FirebaseManager.shared.firestore
              .collection(FBConstant.chatMessages)
              .document(room)
              .collection(FBConstant.messages)
@@ -96,16 +96,14 @@ class ChatViewModel: ObservableObject{
         guard let fromId = FirebaseManager.shared.auth.currentUser?.uid, let toId = selectedChatUser?.uid else {return}
         createMessage(fromId: fromId, toId: toId) { [weak self] in
             guard let self = self else {return}
-            self.createUserChats(isResiver: true)
-            self.createUserChats(isResiver: false)
+//            self.createUserChats(isResiver: true)
+//            self.createUserChats(isResiver: false)
             self.resetInputs()
         }
     }
     
     private func resetInputs(){
-        print(chatText)
         chatText = ""
-        print(chatText)
         withAnimation(.easeInOut(duration: 0.15)){
             imageData = nil
         }
@@ -114,13 +112,11 @@ class ChatViewModel: ObservableObject{
     private func createMessage(fromId: String, toId: String, completion: @escaping () -> Void){
        let path = Helpers.getRoomUid(toId: toId, fromId: fromId)
         let ref = FirebaseManager.shared.storage.reference().child("imagesChat_\(path)").child(imageData?.imageName ?? "noName")
+        
         uploadImage(ref: ref) { url in
-            let messageData = [FBConstant.fromId:fromId,
-                               FBConstant.toId: toId,
-                               "imageURL": url?.absoluteString ?? "",
-                               FBConstant.text: self.chatText,
-                               FBConstant.timestamp: Timestamp()
-            ] as [String : Any]
+            
+            let image = ImageData(imageURL: url?.absoluteString ?? "")
+            let messageData = Message(fromId: fromId, toId: toId, text: self.chatText, image: image)
             self.saveMessageInFirebasestore(fromId: fromId, toId: toId, messageData: messageData, completion: completion)
         }
     }
@@ -129,46 +125,46 @@ class ChatViewModel: ObservableObject{
     
     //MARK: -  create User Chats
     
-    private func createUserChats(isResiver: Bool){
-        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid, let chatUser = selectedChatUser, let currentUser = currentUser else {return}
-        let toId = chatUser.uid
-        let document = FirebaseManager.shared.firestore
-            .collection(FBConstant.userChats)
-            .document(isResiver ? fromId : toId)
-            .collection(FBConstant.chats)
-            .document(isResiver ? toId : fromId)
-        let data = [
-            FBConstant.timestamp: Timestamp(),
-            FBConstant.text: chatText,
-            FBConstant.fromId: fromId,
-            FBConstant.toId: isResiver ? toId : fromId,
-            FBConstant.profileImageUrl: isResiver ? chatUser.profileImageUrl : currentUser.profileImageUrl,
-            FBConstant.name: isResiver ? chatUser.name : currentUser.name
-        ] as [String : Any]
-        
-        document.setData(data) { error in
-            if let error = error{
-                Helpers.handleError(error, title: "Failed to save persist recent message", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
-                return
-            }
-        }
-    }
+//    private func createUserChats(isResiver: Bool){
+//        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid, let chatUser = selectedChatUser, let currentUser = currentUser else {return}
+//        let toId = chatUser.uid
+//        let document = FirebaseManager.shared.firestore
+//            .collection(FBConstant.userChats)
+//            .document(isResiver ? fromId : toId)
+//            .collection(FBConstant.chats)
+//            .document(isResiver ? toId : fromId)
+//        let data = [
+//            FBConstant.timestamp: Timestamp(),
+//            FBConstant.text: chatText,
+//            FBConstant.fromId: fromId,
+//            FBConstant.toId: isResiver ? toId : fromId,
+//            FBConstant.profileImageUrl: isResiver ? chatUser.profileImageUrl : currentUser.profileImageUrl,
+//            FBConstant.name: isResiver ? chatUser.name : currentUser.name
+//        ] as [String : Any]
+//
+//        document.setData(data) { error in
+//            if let error = error{
+//                Helpers.handleError(error, title: "Failed to save persist recent message", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
+//                return
+//            }
+//        }
+//    }
     
     //MARK: - create messages
-    private func saveMessageInFirebasestore(fromId: String, toId: String, messageData: [String : Any], completion: @escaping () -> Void){
+    private func saveMessageInFirebasestore(fromId: String, toId: String, messageData: Message, completion: @escaping () -> Void){
         let room = Helpers.getRoomUid(toId: toId, fromId: fromId)
         let document = FirebaseManager.shared.firestore
             .collection(FBConstant.chatMessages)
             .document(room)
             .collection(FBConstant.messages)
             .document()
-        document.setData(messageData) { error in
+        try? document.setData(from: messageData, completion: { error in
             if let error = error{
                 Helpers.handleError(error, title: "Failed to save message", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
                 return
             }
             completion()
-        }
+        })
     }
     
     
@@ -204,7 +200,7 @@ class FBConstant{
     
     //MARK: - For message collection and document
     static let chats = "Chats"
-    static let chatMessages = "ChatMessages"
+    static let chatMessages = "ChatMessages2"
     static let userChats = "UserChats"
     static let messages: String = "messages"
     static let resentMessages = "resent_messages"

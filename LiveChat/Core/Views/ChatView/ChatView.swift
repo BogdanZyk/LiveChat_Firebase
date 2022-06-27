@@ -172,7 +172,7 @@ extension ChatView{
     private func messageRowView(messages: Message) -> some View{
         ChatBubble(direction: messages.fromId == currentUserId ? .right : .left) {
             let isRecevied = messages.fromId == currentUserId
-            if let image = messages.imageURL, let imageURL = URL(string: image){
+            if let image = messages.image.imageURL, let imageURL = URL(string: image){
                 textAndImageMessageView(messages, isRecevied: isRecevied, imageURL: imageURL)
                 .onTapGesture {
                     chatVM.selectedChatMessages = messages
@@ -214,7 +214,7 @@ extension ChatView{
         Group{
             if showDetailsImageView{
                 VStack{
-                    if let image = chatVM.selectedChatMessages?.imageURL, let url = URL(string: image){
+                    if let image = chatVM.selectedChatMessages?.image.imageURL, let url = URL(string: image){
                         ImageView(imageUrl: url)
                             .frame(height: 400)
                             .padding(10)

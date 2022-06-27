@@ -12,7 +12,7 @@ import FirebaseStorage
 class LoginViewModel: ObservableObject{
     @Published var email: String = ""
     @Published var userName: String = ""
-    @Published var imageData: ImageData?
+    @Published var imageData: UIImageData?
     @Published var pass: String = ""
     @Published var errorMessage = ""
     @Published var showAlert: Bool = false
