@@ -6,21 +6,14 @@
 //
 
 import Foundation
-import Firebase
 import FirebaseFirestoreSwift
+import FirebaseFirestore
 
 struct RecentMessages: Codable, Identifiable{
     
-
     @DocumentID var id: String?
-    let text, fromId, toId: String
-    let name, profileImageUrl: String
-    let timestamp: Date
-   
-    var timeAgo: String{
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .abbreviated
-        return formatter.localizedString(for: timestamp, relativeTo: Date())
-    }
+    let uid, name, profileImageUrl: String
+    let message: Message
+    //var timestamp: Timestamp = Timestamp()
     
 }

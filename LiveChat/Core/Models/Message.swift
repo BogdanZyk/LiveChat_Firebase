@@ -6,11 +6,8 @@
 //
 
 import Foundation
+import FirebaseFirestoreSwift
 import FirebaseFirestore
-//struct Message: Codable, Identifiable{
-//    @DocumentID var id: String?
-//    let fromId, toId, imageURL, text: String
-//}
 
 
 struct Message: Codable, Identifiable{
@@ -19,6 +16,11 @@ struct Message: Codable, Identifiable{
     var image: ImageData = ImageData()
     var viewed: Bool = false
     var timestamp: Timestamp = Timestamp()
+    
+    
+    var messageTime: String{
+        timestamp.dateValue().formatted(date: .omitted, time: .shortened)
+    }
 }
 
 struct ImageData: Codable, Identifiable{

@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct ChatView: View {
-    let selectedChatUser: User?
+    let selectedChatUserId: String?
+    @EnvironmentObject var userVM: UserManagerViewModel
     @StateObject private var chatVM: ChatViewModel
     let columns = [GridItem(.flexible(minimum: 10))]
     let currentUserId = FirebaseManager.shared.auth.currentUser?.uid ?? ""
-    init(selectedChatUser: User?, currentUser: User?){
-        self.selectedChatUser = selectedChatUser
-        self._chatVM = StateObject.init(wrappedValue: ChatViewModel(selectedChatUser: selectedChatUser, currentUser: currentUser))
+    init(selectedChatUserId: String?){
+        self.selectedChatUserId = selectedChatUserId
+        self._chatVM = StateObject.init(wrappedValue: ChatViewModel(selectedChatUserId: selectedChatUserId))
     }
     @State private var showProfileView: Bool = false
     @State private var showImagePicker: Bool = false
@@ -35,10 +36,13 @@ struct ChatView: View {
             }
             chatBottomBar
             NavigationLink(isActive: $showProfileView) {
-                UserProfileView(userId: chatVM.selectedChatUser?.uid)
+                UserProfileView(user: chatVM.selectedChatUser)
             } label: {
                 EmptyView()
             }
+        }
+        .onAppear{
+            chatVM.currentUser = userVM.currentUser
         }
         .overlay{
             detailsImageView
@@ -78,19 +82,6 @@ struct ChatView: View {
 
 
 extension ChatView{
-    
-    
-//    private var navigationTitle: some View{
-//        Group{
-//
-//        }
-//    }
-    
-//    private var userAvatarButton: some View{
-//        Group{
-//
-//        }
-//    }
     private var chatBottomBar: some View{
         VStack(alignment: .leading, spacing: 20) {
             Divider()
@@ -188,9 +179,12 @@ extension ChatView{
     }
     
     private func textMessageView(_ message: Message, isRecevied: Bool) -> some View{
-            VStack(alignment: .leading, spacing: 5) {
+            HStack(alignment: .bottom, spacing: 5) {
                 Text(message.text)
                     .font(.system(size: 14, weight: .regular))
+                    .foregroundColor(isRecevied ? .white : .black)
+                Text(message.messageTime)
+                    .font(.urbRegular(size: 10))
                     .foregroundColor(isRecevied ? .white : .black)
             }
             .padding(EdgeInsets.init(top: 10, leading: 15, bottom: 10, trailing: 15))

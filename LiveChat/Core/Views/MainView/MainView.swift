@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     @EnvironmentObject var loginVM: LoginViewModel
+    @StateObject private var userVM = UserManagerViewModel()
     @State private var selectionTab: Tab = .Chats
     init(){
         UITabBar.appearance().isHidden = true
@@ -28,6 +29,7 @@ struct MainView: View {
                     VStack(spacing: 0) {
                         MainMessagesView()
                             .environmentObject(loginVM)
+                            .environmentObject(userVM)
                         tabBarView
                     }
                 }

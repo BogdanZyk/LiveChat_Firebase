@@ -10,8 +10,7 @@ import SwiftUI
 struct MainMessagesView: View {
     @EnvironmentObject private var loginVM: LoginViewModel
     @StateObject private var mainMessVM = MainMessagesViewModel()
-    @StateObject private var testVM = TestDataViewModel()
-    @StateObject private var userVM = UserManagerViewModel()
+    @EnvironmentObject var userVM: UserManagerViewModel
     @State private var showSideBarView: Bool = false
     @State private var showNewMessageView: Bool = false
     @State private var showChatView: Bool = false
@@ -21,20 +20,6 @@ struct MainMessagesView: View {
 
             VStack(spacing: 0) {
                 searchChatTextFieldView
-                HStack {
-                    Button {
-                        testVM.createTestMessage()
-                    } label: {
-                        Text("Create mess")
-                    }
-                    Button {
-                        testVM.fetchTestMessage()
-                    } label: {
-                        Text("fetch mess")
-                    }
-                    Text(testVM.messages?.text ?? "")
-                }
-
                 List{
                     chatRowSection
                 }
@@ -54,7 +39,7 @@ struct MainMessagesView: View {
                 }
             }
             .sheet(isPresented: $showNewMessageView) {
-                CreateNewMessageView(showChatView: $showChatView, selectedChatUser: $mainMessVM.selectedChatUser)
+                CreateNewMessageView(showChatView: $showChatView, selectedChatUserId: $mainMessVM.selectedChatUserId)
             }
         
     }
@@ -65,6 +50,7 @@ struct MainMessagesView_Previews: PreviewProvider {
         NavigationView {
             MainMessagesView()
                 .environmentObject(LoginViewModel())
+                .environmentObject(UserManagerViewModel())
         }
 //            .preferredColorScheme(.dark)
     }
@@ -108,34 +94,12 @@ extension MainMessagesView{
         .padding(.top, 10)
         .padding(.horizontal, 15)
     }
-//    //MARK: - navbar
-//    private var prorileAvatarNavView: some View{
-//        HStack {
-//            UserAvatarViewComponent(pathImage: userVM.currentUser?.profileImageUrl)
-//            VStack(alignment: .leading, spacing: 2){
-//                Text("Hey!")
-//                    .font(.caption)
-//                Text(userVM.currentUser?.name ?? "")
-//                    .font(.system(size: 14, weight: .semibold))
-//            }
-//        }
-//        .padding(.leading, 5)
-//    }
-//
-//    private var userSettingNavigationLink: some View{
-//        Group{
-//            NavigationLink(isActive: $showSideBarView) {
-//                SideBarView(loginVM: loginVM)
-//            } label: {
-//                EmptyView()
-//            }
-//        }
-//    }
     
     private var chatViewNavigationLink: some View{
         Group{
             NavigationLink(isActive: $showChatView) {
-                ChatView(selectedChatUser: mainMessVM.selectedChatUser, currentUser: userVM.currentUser)
+                ChatView(selectedChatUserId: mainMessVM.selectedChatUserId)
+                    .environmentObject(userVM)
             } label: {
                 EmptyView()
             }
@@ -161,7 +125,7 @@ extension MainMessagesView{
     
     private func chatRowView(_ resentMessage: RecentMessages) -> some View{
         Button {
-            mainMessVM.selectedChatUser = User(uid: resentMessage.toId, email: "", profileImageUrl: resentMessage.profileImageUrl, name: resentMessage.name)
+            mainMessVM.selectedChatUserId = resentMessage.uid
             showChatView.toggle()
         } label: {
             HStack(spacing: 20){
@@ -171,11 +135,11 @@ extension MainMessagesView{
                         Text(resentMessage.name)
                             .font(.urbMedium(size: 16))
                         Spacer()
-                        Text(resentMessage.timeAgo)
+                        Text(resentMessage.message.messageTime)
                             .font(.urbMedium(size: 12))
                             .foregroundColor(.gray)
                     }
-                    Text(resentMessage.text)
+                    Text(resentMessage.message.text)
                         .font(.urbMedium(size: 14))
                         .foregroundColor(.gray)
                 }
@@ -186,7 +150,7 @@ extension MainMessagesView{
        }
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button("Delete Chat", role: .destructive) {
-                mainMessVM.deleteChat(id: resentMessage.toId)
+                mainMessVM.deleteChat(id: resentMessage.uid)
             }
         }
     }

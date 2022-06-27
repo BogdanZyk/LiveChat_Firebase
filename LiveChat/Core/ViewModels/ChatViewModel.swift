@@ -24,6 +24,7 @@ class ChatViewModel: ObservableObject{
     @Published var selectedChatMessages: Message?
     @Published var isLodaing: Bool = false
     
+    var selectedChatUserId: String?
     var uploadTask: StorageUploadTask?
     
     var firestoreListener: ListenerRegistration?
@@ -35,10 +36,9 @@ class ChatViewModel: ObservableObject{
        return !chatText.isEmpty || imageData != nil
     }
     
-    init(selectedChatUser: User?, currentUser: User?){
-        print("init")
-        self.currentUser = currentUser
-        self.selectedChatUser = selectedChatUser
+    init(selectedChatUserId: String?){
+        self.selectedChatUserId = selectedChatUserId
+        fetchUser()
         fetchMessages()
     }
     
@@ -47,10 +47,32 @@ class ChatViewModel: ObservableObject{
         firestoreListener?.remove()
     }
     
+    //MARK: - Fetch chat user
+     func fetchUser(){
+        guard let uid = selectedChatUserId else {return}
+        FirebaseManager.shared.firestore.collection("users")
+            .document(uid).getDocument { [weak self] (snapshot, error) in
+                guard let self = self else {return}
+                if let error = error{
+                    print(error.localizedDescription)
+                    Helpers.handleError(error, title: "Failed to fetch user", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
+                    
+                }
+                do{
+                    let user = try snapshot?.data(as: User.self)
+                    self.selectedChatUser = user
+                }catch{
+                    print("Failed to decode data \(error.localizedDescription)")
+                }
+                
+            }
+    }
+    
+    
     //MARK: - Fecth all MESSAGES
     
-     func fetchMessages(){
-        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid, let toId = selectedChatUser?.uid else {return}
+    private func fetchMessages(){
+        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid, let toId = selectedChatUserId else {return}
          let room = Helpers.getRoomUid(toId: toId, fromId: fromId)
         FirebaseManager.shared.firestore
              .collection(FBConstant.chatMessages)
@@ -94,12 +116,10 @@ class ChatViewModel: ObservableObject{
     
     public func sendMessage(){
         guard let fromId = FirebaseManager.shared.auth.currentUser?.uid, let toId = selectedChatUser?.uid else {return}
-        createMessage(fromId: fromId, toId: toId) { [weak self] in
-            guard let self = self else {return}
-//            self.createUserChats(isResiver: true)
-//            self.createUserChats(isResiver: false)
-            self.resetInputs()
-        }
+        let messageText = chatText
+        let image = imageData
+        resetInputs()
+        createMessage(fromId: fromId, toId: toId, messageText: messageText, imageData: image)
     }
     
     private func resetInputs(){
@@ -109,15 +129,17 @@ class ChatViewModel: ObservableObject{
         }
     }
     
-    private func createMessage(fromId: String, toId: String, completion: @escaping () -> Void){
+    private func createMessage(fromId: String, toId: String, messageText: String, imageData: UIImageData?){
        let path = Helpers.getRoomUid(toId: toId, fromId: fromId)
         let ref = FirebaseManager.shared.storage.reference().child("imagesChat_\(path)").child(imageData?.imageName ?? "noName")
-        
-        uploadImage(ref: ref) { url in
-            
+        uploadImage(ref: ref, image: imageData?.image) { url in
             let image = ImageData(imageURL: url?.absoluteString ?? "")
-            let messageData = Message(fromId: fromId, toId: toId, text: self.chatText, image: image)
-            self.saveMessageInFirebasestore(fromId: fromId, toId: toId, messageData: messageData, completion: completion)
+            let messageData = Message(fromId: fromId, toId: toId, text: messageText, image: image)
+            self.saveMessageInFirebasestore(fromId: fromId, toId: toId, messageData: messageData) { [weak self] message in
+                guard let self = self else {return}
+                self.createUserChats(isResiver: true, message: message)
+                self.createUserChats(isResiver: false, message: message)
+            }
         }
     }
 
@@ -125,33 +147,30 @@ class ChatViewModel: ObservableObject{
     
     //MARK: -  create User Chats
     
-//    private func createUserChats(isResiver: Bool){
-//        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid, let chatUser = selectedChatUser, let currentUser = currentUser else {return}
-//        let toId = chatUser.uid
-//        let document = FirebaseManager.shared.firestore
-//            .collection(FBConstant.userChats)
-//            .document(isResiver ? fromId : toId)
-//            .collection(FBConstant.chats)
-//            .document(isResiver ? toId : fromId)
-//        let data = [
-//            FBConstant.timestamp: Timestamp(),
-//            FBConstant.text: chatText,
-//            FBConstant.fromId: fromId,
-//            FBConstant.toId: isResiver ? toId : fromId,
-//            FBConstant.profileImageUrl: isResiver ? chatUser.profileImageUrl : currentUser.profileImageUrl,
-//            FBConstant.name: isResiver ? chatUser.name : currentUser.name
-//        ] as [String : Any]
-//
-//        document.setData(data) { error in
-//            if let error = error{
-//                Helpers.handleError(error, title: "Failed to save persist recent message", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
-//                return
-//            }
-//        }
-//    }
+    private func createUserChats(isResiver: Bool, message: Message){
+        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid, let chatUser = selectedChatUser, let currentUser = currentUser else {return}
+        let toId = chatUser.uid
+        let document = FirebaseManager.shared.firestore
+            .collection(FBConstant.userChats)
+            .document(isResiver ? fromId : toId)
+            .collection(FBConstant.chats)
+            .document(isResiver ? toId : fromId)
+        
+        let chatData = RecentMessages(uid: isResiver ? toId : fromId, name: isResiver ? chatUser.name : currentUser.name, profileImageUrl: (isResiver ? chatUser.profileImageUrl : currentUser.profileImageUrl) ?? "", message: message)
+        do {
+            try document.setData(from: chatData, completion: { error in
+                if let error = error{
+                    Helpers.handleError(error, title: "Failed to save persist recent message", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
+                    return
+                }
+                })
+        } catch {
+            Helpers.handleError(error, title: "Failed to save persist recent message", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
+        }
+    }
     
     //MARK: - create messages
-    private func saveMessageInFirebasestore(fromId: String, toId: String, messageData: Message, completion: @escaping () -> Void){
+    private func saveMessageInFirebasestore(fromId: String, toId: String, messageData: Message, completion: @escaping (_ message: Message) -> Void){
         let room = Helpers.getRoomUid(toId: toId, fromId: fromId)
         let document = FirebaseManager.shared.firestore
             .collection(FBConstant.chatMessages)
@@ -163,13 +182,13 @@ class ChatViewModel: ObservableObject{
                 Helpers.handleError(error, title: "Failed to save message", errorMessage: &self.errorMessage, showAlert: &self.showAlert)
                 return
             }
-            completion()
+            completion(messageData)
         })
     }
     
     
-    private func uploadImage(ref: StorageReference, completion: @escaping (_ url: URL?) -> Void){
-        guard let imageData = Helpers.preparingImageforUpload(imageData?.image) else {return completion(nil)}
+    private func uploadImage(ref: StorageReference, image: UIImage?, completion: @escaping (_ url: URL?) -> Void){
+        guard let imageData = Helpers.preparingImageforUpload(image) else {return completion(nil)}
         self.uploadTask = ref.putData(imageData, metadata: nil) { [weak self] (metadate, error) in
             guard let self = self else {return completion(nil)}
             if let error = error{
@@ -200,7 +219,7 @@ class FBConstant{
     
     //MARK: - For message collection and document
     static let chats = "Chats"
-    static let chatMessages = "ChatMessages2"
+    static let chatMessages = "ChatMessages"
     static let userChats = "UserChats"
     static let messages: String = "messages"
     static let resentMessages = "resent_messages"
@@ -210,4 +229,5 @@ class FBConstant{
     static let text = "text"
     static let profileImageUrl = "profileImageUrl"
     static let name = "name"
+    static let messageTimeInChat = "message.timestamp"
 }

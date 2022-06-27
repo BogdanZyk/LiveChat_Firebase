@@ -9,24 +9,18 @@ import SwiftUI
 
 struct UserProfileView: View {
     
-    let userId: String?
-    @StateObject private var profileVM: UserProfileViewModel
-    
-    init(userId: String?){
-        self.userId = userId
-        self._profileVM = StateObject(wrappedValue: UserProfileViewModel(userId: userId))
-    }
+    var user: User?
     
     var body: some View {
         VStack{
-            UserAvatarViewComponent(pathImage: profileVM.profileUser?.profileImageUrl, size: .init(width: 50, height: 50))
-            Text(profileVM.profileUser?.name ?? "")
+            UserAvatarViewComponent(pathImage: user?.profileImageUrl, size: .init(width: 50, height: 50))
+            Text(user?.name ?? "")
         }
     }
 }
 
 struct UserProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        UserProfileView(userId: "Sux8PnvfWTSTf9dqyYZE0BbKnuW2")
+        UserProfileView()
     }
 }

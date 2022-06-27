@@ -12,9 +12,9 @@ import SwiftUI
 
 class MainMessagesViewModel: ObservableObject{
     
+    @Published var selectedChatUserId: String?
     @Published var errorMessage = ""
     @Published var showAlert: Bool = false
-    @Published var selectedChatUser: User?
     @Published var recentMessages = [RecentMessages]()
     private var firestoreListener: ListenerRegistration?
     
@@ -27,6 +27,7 @@ class MainMessagesViewModel: ObservableObject{
         firestoreListener?.remove()
     }
     
+   
 
     
     private func fetchRecentMessages(){
@@ -35,7 +36,7 @@ class MainMessagesViewModel: ObservableObject{
             .collection(FBConstant.userChats)
             .document(uid)
             .collection(FBConstant.chats)
-            .order(by: FBConstant.timestamp)
+            .order(by: FBConstant.messageTimeInChat)
             .addSnapshotListener { [weak self] (shapshot, error) in
                 guard let self = self else {return}
                 if let error = error{
@@ -43,25 +44,23 @@ class MainMessagesViewModel: ObservableObject{
                     return
                 }
                 shapshot?.documentChanges.forEach({ change in
+                    if change.type != .removed{
                         let docId = change.document.documentID
-                    
-                  
-                    
-                    if let index = self.recentMessages.firstIndex(where: {$0.id == docId}){
-                        self.recentMessages.remove(at: index)
-                    }
-                    
-                    do{
-                        let rm = try change.document.data(as: RecentMessages.self)
+                        if let index = self.recentMessages.firstIndex(where: {$0.id == docId}){
+                            self.recentMessages.remove(at: index)
+                        }
+                        do{
+                            let rm = try change.document.data(as: RecentMessages.self)
                             self.recentMessages.insert(rm, at: 0)
-                        
-                    }catch{
-                        print("Failed to decode data \(error.localizedDescription)")
+                            
+                        }catch{
+                            print("Failed to decode data \(error.localizedDescription)")
+                        }
                     }
-                    
                 })
             }
     }
+    
     public func deleteChat(id: String){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         FirebaseManager.shared.firestore
@@ -75,7 +74,7 @@ class MainMessagesViewModel: ObservableObject{
                 }else{
                     self.deleteMessages(id: id, uid: uid)
                     withAnimation {
-                        if let index =  self.recentMessages.firstIndex(where: {$0.toId == id}){
+                        if let index =  self.recentMessages.firstIndex(where: {$0.uid == id}){
                             self.recentMessages.remove(at: index)
                         }
                     }
@@ -85,7 +84,6 @@ class MainMessagesViewModel: ObservableObject{
     
     private func deleteMessages(id: String, uid: String){
         let room = Helpers.getRoomUid(toId: id, fromId: uid)
-        print(room)
         FirebaseManager.shared.firestore
             .collection(FBConstant.chatMessages)
             .document(room)

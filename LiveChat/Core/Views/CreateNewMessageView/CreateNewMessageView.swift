@@ -10,7 +10,7 @@ import SwiftUI
 struct CreateNewMessageView: View {
     @Environment(\.self) var env
     @Binding var showChatView: Bool
-    @Binding var selectedChatUser: User?
+    @Binding var selectedChatUserId: String?
     @StateObject private var createMessVM = CreateNewMessageViewModel()
     var body: some View {
         NavigationView {
@@ -62,7 +62,7 @@ extension CreateNewMessageView{
     }
     private func userRowView(_ user: User) -> some View{
         Button {
-            selectedChatUser = user
+            selectedChatUserId = user.uid
             showChatView.toggle()
             env.dismiss()
         } label: {

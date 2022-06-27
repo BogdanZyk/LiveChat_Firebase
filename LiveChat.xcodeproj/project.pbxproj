@@ -35,7 +35,6 @@
 		5A75B3742868D0DC0037AD74 /* TestDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A75B3732868D0DC0037AD74 /* TestDataViewModel.swift */; };
 		5A838B7C28563AD5000B0603 /* UserManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A838B7B28563AD4000B0603 /* UserManagerViewModel.swift */; };
 		5A838B7E28565242000B0603 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A838B7D28565242000B0603 /* UserProfileView.swift */; };
-		5A838B8128565266000B0603 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A838B8028565266000B0603 /* UserProfileViewModel.swift */; };
 		5AAED8CA2855EA30006CC9C8 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5AAED8C92855EA30006CC9C8 /* FirebaseAuth */; };
 		5AAED8CC2855EA30006CC9C8 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 5AAED8CB2855EA30006CC9C8 /* FirebaseFirestore */; };
 		5AAED8CE2855EA30006CC9C8 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 5AAED8CD2855EA30006CC9C8 /* FirebaseFirestoreSwift */; };
@@ -87,7 +86,6 @@
 		5A75B3732868D0DC0037AD74 /* TestDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDataViewModel.swift; sourceTree = "<group>"; };
 		5A838B7B28563AD4000B0603 /* UserManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagerViewModel.swift; sourceTree = "<group>"; };
 		5A838B7D28565242000B0603 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
-		5A838B8028565266000B0603 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
 		5AE7409C28469AD00001893B /* LiveChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AE7409F28469AD00001893B /* LiveChatApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveChatApp.swift; sourceTree = "<group>"; };
 		5AE740A128469AD00001893B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -292,7 +290,6 @@
 				5A6ACEE6284B9ED400C9B49C /* MainMessagesViewModel.swift */,
 				5AFA5FA2284C022F0072B57E /* CreateNewMessageViewModel.swift */,
 				5AFA5FA4284C1D1D0072B57E /* ChatViewModel.swift */,
-				5A838B8028565266000B0603 /* UserProfileViewModel.swift */,
 				5A558578285F792A00C59A32 /* VoiceViewModel.swift */,
 				5A64F1EE2860D0ED00E5FAF8 /* PlayerViewModel.swift */,
 				5A75B3732868D0DC0037AD74 /* TestDataViewModel.swift */,
@@ -456,7 +453,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5A838B8128565266000B0603 /* UserProfileViewModel.swift in Sources */,
 				5A55857C285F8C4500C59A32 /* ChatBubble.swift in Sources */,
 				5A2AC93D2852A5FA008B7741 /* RecentMessages.swift in Sources */,
 				5AE740BD2846AD2C0001893B /* FirebaseManager.swift in Sources */,
