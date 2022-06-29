@@ -10,9 +10,11 @@ import SwiftUI
 extension Color {
     static let accentBlue = Color("accentBlue")
     static let fontPrimary = Color("fontPrimary")
-    static let greyNeutral = Color("greyNeutral")
-    static let lightGreyNeutral = Color("lightGreyNeutral")
-    static let darkGrayNeutral = Color("darkGrayNeutral")
+    static let bgWhite = Color("bgWhite")
+    static let appGrey = Color("Grey")
+    static let lightBlue = Color("lightBlue")
+    static let lightGrey = Color("lightGrey")
+    static let secondaryFontGrey = Color("secondaryFontGrey")
     static let secondaryGreen = Color("secondaryGreen")
-    static let secondaryYelloy = Color("secondaryYelloy")
+    static let destructivRed = Color("destructivRed")
 }

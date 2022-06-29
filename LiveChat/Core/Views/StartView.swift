@@ -12,21 +12,24 @@ struct StartView: View {
     @State private var isActive: Bool = false
     var body: some View {
         Group{
-            
             if isActive{
-                if loginVM.isloggedUser{
-                    //VoiceView()
-                    MainView()
-                        .environmentObject(loginVM)
-                }else{
-                    LoginView()
-                        
-                }
+                MainOnbordingView()
+                    .environmentObject(loginVM)
+//                if loginVM.isloggedUser{
+//                    //VoiceView()
+//                    MainView()
+//                }else{
+//                    MainOnbordingView()
+//                        .environmentObject(loginVM)
+//                }
             }else{
                 LaunchScrenView(isActive: $isActive)
             }
         }
         .environmentObject(loginVM)
+        .sheet(isPresented: $loginVM.showModalView) {
+            Text("Modal")
+        }
     }
 }
 

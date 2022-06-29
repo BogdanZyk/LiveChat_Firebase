@@ -13,7 +13,6 @@ struct SettingsView: View {
             Text("Settings")
         }
         .allFrame()
-        .background(Color.lightGreyNeutral)
     }
 }
 

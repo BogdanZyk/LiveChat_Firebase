@@ -10,8 +10,11 @@ import FirebaseFirestore
 import FirebaseStorage
 
 class LoginViewModel: ObservableObject{
+    @Published var showModalView: Bool = false
     @Published var email: String = ""
+    @Published var repeatPass: String = ""
     @Published var userName: String = ""
+    @Published var userFirstName: String = ""
     @Published var imageData: UIImageData?
     @Published var pass: String = ""
     @Published var errorMessage = ""
@@ -20,15 +23,17 @@ class LoginViewModel: ObservableObject{
     @Published var showLoader: Bool = false
     
     init(){
-        DispatchQueue.main.async {
-            self.checkLoginStatus()
-        }
+        self.checkLoginStatus()
     }
     
     private func checkLoginStatus(){
         isloggedUser = FirebaseManager.shared.auth.currentUser?.uid != nil
     }
 
+    
+    public var isValidEmailAndPass: Bool{
+       !(email.isEmpty) && !(pass.isEmpty)
+    }
     
     public func login(){
         showLoader = true

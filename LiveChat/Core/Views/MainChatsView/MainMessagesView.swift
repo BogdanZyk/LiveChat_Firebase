@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MainMessagesView: View {
-    @EnvironmentObject private var loginVM: LoginViewModel
     @StateObject private var mainMessVM = MainMessagesViewModel()
     @EnvironmentObject var userVM: UserManagerViewModel
     @State private var showSideBarView: Bool = false
@@ -49,7 +48,6 @@ struct MainMessagesView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             MainMessagesView()
-                .environmentObject(LoginViewModel())
                 .environmentObject(UserManagerViewModel())
         }
 //            .preferredColorScheme(.dark)

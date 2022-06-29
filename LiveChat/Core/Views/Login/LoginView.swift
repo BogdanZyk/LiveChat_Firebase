@@ -8,124 +8,89 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var isLogin: Bool = false
-    @State private var showImagePicker: Bool = false
+    @Binding var showLoginView: Bool
     @EnvironmentObject private var loginVM: LoginViewModel
     var body: some View {
-        NavigationView{
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: 30) {
-                    picker
-                    if !isLogin{
-                        avatarButton
-                    }
-                    inputSection
+        ZStack{
+            Color.bgWhite.ignoresSafeArea()
+                .onTapGesture {
+                    UIApplication.shared.endEditing()
                 }
-                .padding(.horizontal)
+            VStack(spacing: 40){
+                navTitle
+                inputSection
+                Divider()
+                socialButtonView
+                Spacer()
+                loginActionButtons
             }
-            .background(Color.gray.opacity(0.1))
-            .navigationTitle(isLogin ? "Login" : "Create Account")
-            .alert("", isPresented: $loginVM.showAlert) {
-                Button("Ok", role: .cancel, action: {})
-            } message: {
-                Text(loginVM.errorMessage)
-            }
-            .sheet(isPresented: $showImagePicker, onDismiss: nil) {
-                ImagePicker(imageData: $loginVM.imageData)
-            }
+            .padding(.horizontal, 20)
+            .foregroundColor(.fontPrimary)
         }
-        .navigationViewStyle(.stack)
     }
 }
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView()
+        LoginView(showLoginView: .constant(false))
             .environmentObject(LoginViewModel())
-           // .preferredColorScheme(.dark)
+            //.preferredColorScheme(.dark)
     }
 }
 
 extension LoginView{
-    private var picker: some View{
-        Picker(selection: $isLogin) {
-            Text("Login")
-                .tag(true)
-            Text("Create Account")
-                .tag(false)
-        } label: {
-            Text("")
-        }
-        .pickerStyle(.segmented)
-    }
-    private var avatarButton: some View{
-        Button {
-            showImagePicker = true
-        } label: {
-            VStack{
-                if let image = loginVM.imageData?.image{
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 120, height: 120)
-                        .clipShape(Circle())
-                }else{
-                    Image(systemName: "person.fill")
-                        .font(.system(size: 64))
-                        .padding()
-                        .foregroundColor(.black)
-                }
-            }
-        }
+    private var navTitle: some View{
+        Text("Log In")
+            .font(.urbMedium(size: 20))
     }
     private var inputSection: some View{
         VStack(alignment: .leading, spacing: 20) {
-            Group{
-                if !isLogin{
-                    TextField("Your name", text: $loginVM.userName)
-                }
-                TextField("Email", text: $loginVM.email)
-                    .keyboardType(.emailAddress)
-                    .textInputAutocapitalization(.none)
-                SecureField("Password", text: $loginVM.pass)
-            }
-            .padding(12)
-            .background(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            loginOrCreateButton
-                .padding(.top, 20)
+            TextFieldViewComponent(text: $loginVM.email, promt: "Email Address", font: .urbMedium(size: 16), height: 55)
+            TextFieldViewComponent(text: $loginVM.pass, promt: "Password", font: .urbMedium(size: 16), height: 55, isSecureTF: true)
+            forgotPassButton
         }
+        .padding(.top,20)
     }
-    
-    private var loginOrCreateButton: some View{
+    private var forgotPassButton: some View{
         Button {
-            handleAction()
+            
         } label: {
-            HStack{
-                Group{
-                    if loginVM.showLoader{
-                        ProgressView()
-                            .tint(.white)
-                    }else{
-                        Text(isLogin ? "Login" : "Create Account")
-                            .foregroundColor(.white)
-                            .font(.system(size: 16, weight: .semibold))
-                    }
-                    
-                }
-                .padding(.vertical, 10)
-            }
-            .frame(maxWidth: .infinity)
-            .background(Color.blue, in: RoundedRectangle(cornerRadius: 10))
+            Text("Forgot Password?")
+                .font(.urbMedium(size: 16))
         }
-        .disabled(loginVM.showLoader)
-
     }
-    private func handleAction(){
-        if isLogin{
-            loginVM.login()
-        }else{
-            loginVM.createAccount()
+    private var socialButtonView: some View{
+        VStack(alignment: .leading, spacing: 20) {
+            SocialButton(isGoogleBtn: true, action: {})
+            SocialButton(isGoogleBtn: false, action: {})
+        }
+    }
+    private var loginActionButtons: some View{
+        VStack(alignment: .leading, spacing: 20) {
+            if loginVM.showLoader{
+                ProgressView()
+                    .tint(.accentBlue)
+                    .scaleEffect(1.5)
+                    .frame(height: 50)
+                    .hCenter()
+            }else{
+                CustomButtomView(title: "Log In", isDisabled: !loginVM.isValidEmailAndPass) {
+                    loginVM.login()
+                }
+            }
+            HStack(spacing: 5) {
+                Text("Don’t have an account?")
+                Button {
+                    withAnimation {
+                        showLoginView = false
+                    }
+                } label: {
+                    Text("Sign Up")
+                        .foregroundColor(.accentBlue)
+                }
+            }
+            .font(.urbMedium(size: 16))
+            .hCenter()
         }
     }
 }

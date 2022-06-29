@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MainView: View {
-    @EnvironmentObject var loginVM: LoginViewModel
     @StateObject private var userVM = UserManagerViewModel()
     @State private var selectionTab: Tab = .Chats
     init(){
@@ -28,7 +27,6 @@ struct MainView: View {
                 NavigationView {
                     VStack(spacing: 0) {
                         MainMessagesView()
-                            .environmentObject(loginVM)
                             .environmentObject(userVM)
                         tabBarView
                     }
@@ -51,7 +49,6 @@ struct MainView: View {
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MainView()
-            .environmentObject(LoginViewModel())
     }
 }
 
