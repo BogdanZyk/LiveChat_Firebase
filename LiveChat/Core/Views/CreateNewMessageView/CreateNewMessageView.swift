@@ -68,7 +68,7 @@ extension CreateNewMessageView{
         } label: {
             HStack{
                 UserAvatarViewComponent(pathImage: user.profileImageUrl, size: CGSize.init(width: 50, height: 50))
-                Text(user.name)
+                Text(user.firstName)
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.primary)
             }

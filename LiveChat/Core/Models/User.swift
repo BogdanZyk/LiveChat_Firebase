@@ -11,7 +11,10 @@ struct User: Codable{
     let uid: String
     let email: String
     let profileImageUrl: String?
-    let name: String
-//    let login: String
-//    let description: String?
+    let userName: String
+    let firstName: String
+    let lastName: String
+    let bio: String
+    let userBannerUrl: String
+    let phone: String
 }

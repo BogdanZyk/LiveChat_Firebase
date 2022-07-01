@@ -13,15 +13,11 @@ struct StartView: View {
     var body: some View {
         Group{
             if isActive{
-                MainOnbordingView()
-                    .environmentObject(loginVM)
-//                if loginVM.isloggedUser{
-//                    //VoiceView()
-//                    MainView()
-//                }else{
-//                    MainOnbordingView()
-//                        .environmentObject(loginVM)
-//                }
+                if loginVM.isloggedUser{
+                    MainView()
+                }else{
+                    MainOnbordingView()
+                }
             }else{
                 LaunchScrenView(isActive: $isActive)
             }

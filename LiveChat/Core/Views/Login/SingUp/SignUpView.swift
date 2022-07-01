@@ -15,29 +15,25 @@ struct SignUpView: View {
     var body: some View {
         ZStack {
             Color.bgWhite.ignoresSafeArea()
-            if currentStep == .successfull{
-                VStack {
-                    Text("Registration Successfully Completed!!")
-                        .foregroundColor(.white)
-                }
-                .allFrame()
-                .background(Color.accentBlue)
-                .transition(.move(edge: .leading))
-            }else{
-                VStack(spacing: 40){
-                    navTitle
-                    if currentStep == .step1{
-                        step1
-                            .transition(.move(edge: .leading))
-                    }else if currentStep == .step2{
-                        step2
-                            .transition(.move(edge: .leading))
+            VStack(spacing: 10) {
+                navTitle
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 40){
+                       
+                        if currentStep == .step1{
+                            step1
+                                .transition(.move(edge: .leading))
+                        }else if currentStep == .step2{
+                            step2
+                                .transition(.move(edge: .leading))
+                        }
+                  
                     }
-                    bottomButtons
                 }
-                .padding(.horizontal, 20)
-                .foregroundColor(.fontPrimary)
+                bottomButtons
             }
+            .padding(.horizontal, 20)
+            .foregroundColor(.fontPrimary)
         }
         .onTapGesture {
             UIApplication.shared.endEditing()
@@ -57,14 +53,12 @@ struct SignUpView_Previews: PreviewProvider {
 }
 
 extension SignUpView{
-    
-    enum Step{
-        case step1, step2, successfull
-    }
+
     
     private var navTitle: some View{
         Text("Create an account")
             .font(.urbMedium(size: 20))
+            .padding(.bottom, 10)
     }
     private var step1: some View{
         VStack(alignment: .leading, spacing: 20) {
@@ -88,24 +82,40 @@ extension SignUpView{
         .font(.urbMedium(size: 16))
         .background(Color.bgWhite)
     }
+    
+    private var successView: some View{
+        ZStack {
+            Color.accentBlue.ignoresSafeArea()
+            VStack(spacing: 15) {
+                Image("check")
+                    .resizable()
+                    .frame(width: 180, height: 180)
+                    .aspectRatio(contentMode: .fill)
+                Text("Registration Successfully Completed!!")
+                    .font(.urbMedium(size: 20))
+                    .foregroundColor(.bgWhite)
+            }
+        }
+    }
+    
     //MARK: - View Components
     
     
     private var avatarView: some View{
         ZStack{
+            Color.lightGrey
             if let image = loginVM.imageData?.image{
                 Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             }else{
-                Image("avatarDefault")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
+                    Image("avatarDefault")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
             }
         }
         .frame(width: 130, height: 130)
         .clipShape(Circle())
-      
         .overlay(alignment: .bottomTrailing){
             ZStack{
                 Circle()
@@ -125,11 +135,11 @@ extension SignUpView{
     
     private var inputSectionStep2: some View{
         VStack(alignment: .leading, spacing: 20) {
-            TextFieldViewComponent(text: $loginVM.userFirstName, promt: "Firts name", font: .urbMedium(size: 16), height: 55)
+            TextFieldViewComponent(text: $loginVM.userFirstName, promt: "First name", font: .urbMedium(size: 16), height: 55)
             TextFieldViewComponent(text: $loginVM.userName, promt: "User name", font: .urbMedium(size: 16), height: 55)
             Text("Step 3. Add bio")
                 .padding(.top, 20)
-            TextFieldViewComponent(text: $loginVM.userName, promt: "Tell about yourself", font: .urbMedium(size: 16), height: 55)
+            TextFieldViewComponent(text: $loginVM.userBio, promt: "Tell about yourself", font: .urbMedium(size: 16), height: 55)
         }
         .padding(.top, 20)
     }
@@ -160,9 +170,13 @@ extension SignUpView{
                     .frame(height: 50)
                     .hCenter()
             }else{
-                CustomButtomView(title: isStep1 ? "Next" : "Create account", isDisabled: false) {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        currentStep = isStep1 ? .step2 : .successfull
+                CustomButtomView(title: isStep1 ? "Next" : "Create account", isDisabled: !loginVM.isValidSingUp(currentStep)) {
+                    if currentStep == .step1{
+                        loginVM.createAccount {
+                            currentStep = .step2
+                        }
+                    }else{
+                        loginVM.persistUserInfoToStorage()
                     }
                 }
                 .animation(nil, value: UUID().uuidString)
@@ -181,5 +195,12 @@ extension SignUpView{
             .disabled(!isStep1)
             .animation(nil, value: UUID().uuidString)
         }
+        .padding(.bottom, 10)
     }
+}
+
+
+
+enum Step{
+    case step1, step2, successfull
 }

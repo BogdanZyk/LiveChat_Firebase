@@ -14,7 +14,7 @@ struct UserProfileView: View {
     var body: some View {
         VStack{
             UserAvatarViewComponent(pathImage: user?.profileImageUrl, size: .init(width: 50, height: 50))
-            Text(user?.name ?? "")
+            Text(user?.firstName ?? "")
         }
     }
 }

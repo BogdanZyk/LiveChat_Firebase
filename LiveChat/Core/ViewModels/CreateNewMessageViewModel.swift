@@ -28,7 +28,7 @@ class CreateNewMessageViewModel: ObservableObject{
         $searchText
             .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
             .sink { searchText in
-                self.searchResult = self.users.filter{$0.name.lowercased().contains(searchText.lowercased())}
+                self.searchResult = self.users.filter{$0.firstName.lowercased().contains(searchText.lowercased())}
             }
             .store(in: &cancellable)
     }

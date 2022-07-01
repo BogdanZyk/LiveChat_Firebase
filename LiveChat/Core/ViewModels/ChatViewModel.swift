@@ -156,7 +156,7 @@ class ChatViewModel: ObservableObject{
             .collection(FBConstant.chats)
             .document(isResiver ? toId : fromId)
         
-        let chatData = RecentMessages(uid: isResiver ? toId : fromId, name: isResiver ? chatUser.name : currentUser.name, profileImageUrl: (isResiver ? chatUser.profileImageUrl : currentUser.profileImageUrl) ?? "", message: message)
+        let chatData = RecentMessages(uid: isResiver ? toId : fromId, name: isResiver ? chatUser.firstName : currentUser.firstName, profileImageUrl: (isResiver ? chatUser.profileImageUrl : currentUser.profileImageUrl) ?? "", message: message)
         do {
             try document.setData(from: chatData, completion: { error in
                 if let error = error{

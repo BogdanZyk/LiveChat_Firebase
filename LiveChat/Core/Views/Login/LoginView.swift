@@ -16,12 +16,15 @@ struct LoginView: View {
                 .onTapGesture {
                     UIApplication.shared.endEditing()
                 }
-            VStack(spacing: 40){
+            VStack(spacing: 10) {
                 navTitle
-                inputSection
-                Divider()
-                socialButtonView
-                Spacer()
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 40){
+                        inputSection
+                        Divider()
+                        socialButtonView
+                    }
+                }
                 loginActionButtons
             }
             .padding(.horizontal, 20)
@@ -34,7 +37,6 @@ struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView(showLoginView: .constant(false))
             .environmentObject(LoginViewModel())
-            //.preferredColorScheme(.dark)
     }
 }
 
@@ -42,6 +44,7 @@ extension LoginView{
     private var navTitle: some View{
         Text("Log In")
             .font(.urbMedium(size: 20))
+            .padding(.bottom, 10)
     }
     private var inputSection: some View{
         VStack(alignment: .leading, spacing: 20) {
@@ -92,5 +95,6 @@ extension LoginView{
             .font(.urbMedium(size: 16))
             .hCenter()
         }
+        .padding(.bottom, 10)
     }
 }

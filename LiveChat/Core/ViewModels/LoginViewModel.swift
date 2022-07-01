@@ -15,6 +15,7 @@ class LoginViewModel: ObservableObject{
     @Published var repeatPass: String = ""
     @Published var userName: String = ""
     @Published var userFirstName: String = ""
+    @Published var userBio: String = ""
     @Published var imageData: UIImageData?
     @Published var pass: String = ""
     @Published var errorMessage = ""
@@ -29,7 +30,22 @@ class LoginViewModel: ObservableObject{
     private func checkLoginStatus(){
         isloggedUser = FirebaseManager.shared.auth.currentUser?.uid != nil
     }
-
+    
+    private var isValidStep1: Bool {
+        !email.isEmpty && !pass.isEmpty && pass == repeatPass
+    }
+    
+    public func isValidSingUp( _ currentStep: Step) -> Bool{
+        if currentStep == .step1{
+            return isValidStep1
+        }else{
+            return isValidStep2
+        }
+    }
+    
+    private var isValidStep2: Bool {
+        !userFirstName.isEmpty && !userName.isEmpty
+    }
     
     public var isValidEmailAndPass: Bool{
        !(email.isEmpty) && !(pass.isEmpty)
@@ -53,23 +69,18 @@ class LoginViewModel: ObservableObject{
         }
     }
     
-    public func createAccount(){
+    public func createAccount(completion: @escaping () -> Void){
         showLoader = true
         FirebaseManager.shared.auth.createUser(withEmail: email, password: pass) {[weak self] (result, error) in
             guard let self = self else {return}
+            self.showLoader = false
             if let err = error{
                 self.handleError(err, title: "Error create user")
                 self.showLoader = false
                 return
             }
-            self.persistUserInfoToStorage{
-                self.showLoader = false
-                withAnimation {
-                    self.checkLoginStatus()
-                }
-                print("Successfull create user, \(result?.user.uid ?? "nil")")
-                self.resetUserInfo()
-            }
+            
+            completion()
         }
     }
     
@@ -83,17 +94,24 @@ class LoginViewModel: ObservableObject{
     }
 
     
-    private func persistUserInfoToStorage(completion: @escaping () -> Void){
+    public func persistUserInfoToStorage(){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        self.showLoader = true
         let ref = FirebaseManager.shared.storage.reference(withPath: uid)
-        let imageUrl = uploadUserAvatarImage(ref: ref)
-        storeUserInformation(imageUrl, completion: completion)
-        
+        uploadUserAvatarImage(ref: ref) { url in
+            self.storeUserInformation(url){
+                self.showLoader = false
+                withAnimation {
+                    self.checkLoginStatus()
+                }
+                self.resetUserInfo()
+            }
+        }
     }
     
     private func storeUserInformation(_ profileImageUrl: URL?, completion: @escaping () -> Void){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
-        let user = User(uid: uid, email: email, profileImageUrl: profileImageUrl?.absoluteString ?? "", name: userName)
+        let user = User(uid: uid, email: email, profileImageUrl: profileImageUrl?.absoluteString ?? "", userName: userName, firstName: userFirstName, lastName: "", bio: userBio, userBannerUrl: "", phone: "")
         do {
             try  FirebaseManager.shared.firestore.collection("users")
                 .document(uid).setData(from: user, completion: { error in
@@ -111,19 +129,17 @@ class LoginViewModel: ObservableObject{
     
 
     
-    private func uploadUserAvatarImage(ref: StorageReference) -> URL?{
-        var returnUrl: URL?
-        guard let imageData = Helpers.preparingImageforUpload(imageData?.image) else {return nil}
+    private func uploadUserAvatarImage(ref: StorageReference, completion: @escaping (URL?) -> Void){
+        guard let imageData = Helpers.preparingImageforUpload(imageData?.image) else {return completion(nil)}
         ref.putData(imageData, metadata: nil) { [weak self] (metadate, error) in
-            guard let self = self else {return}
+            guard let self = self else {return completion(nil)}
             self.handleError(error, title: "Error upload image:")
             ref.downloadURL {[weak self]  (url, error) in
-                guard let self = self else {return}
+                guard let self = self else {return completion(nil)}
                 self.handleError(error, title: "Error load image url")
-                returnUrl = url
+                completion(url)
             }
         }
-        return returnUrl
     }
     
     
@@ -133,6 +149,7 @@ class LoginViewModel: ObservableObject{
     private func resetUserInfo(){
         email = ""
         pass = ""
+        repeatPass = ""
         userName = ""
         imageData = nil
     }

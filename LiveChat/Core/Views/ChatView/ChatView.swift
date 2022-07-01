@@ -54,7 +54,7 @@ struct ChatView: View {
         .toolbar {
             ToolbarItem(placement: .principal) {
                 if !showDetailsImageView{
-                    Text(chatVM.selectedChatUser?.name ?? "")
+                    Text(chatVM.selectedChatUser?.firstName ?? "")
                         .font(.system(size: 17, weight: .semibold))
                 }
             }

@@ -24,7 +24,7 @@ struct CustomButtomView: View {
             .frame(height: 50)
             .background(Color.accentBlue, in: RoundedRectangle(cornerRadius: 10))
         }
-        .shadow(color: .secondaryFontGrey.opacity(0.3), radius: 10, x: 0, y: 6)
+        .shadow(color: .secondaryFontGrey.opacity(0.2), radius: 6, x: 0, y: 6)
         .opacity(isDisabled ? 0.5 : 1)
         .disabled(isDisabled)
     }
@@ -63,9 +63,9 @@ struct SocialButton: View{
             }
             .hCenter()
             .frame(height: 50)
-            .background(Color.bgWhite, in: RoundedRectangle(cornerRadius: 10))
+            .background(Color.lightGrey, in: RoundedRectangle(cornerRadius: 10))
         }
-        .shadow(color: .secondaryFontGrey.opacity(0.2), radius: 10, x: 0, y: 6)
+        .shadow(color: .secondaryFontGrey.opacity(0.2), radius: 6, x: 0, y: 6)
 
     }
 }

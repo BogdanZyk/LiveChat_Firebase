@@ -38,9 +38,10 @@ struct TextFieldViewComponent: View {
 struct TextField_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            Color.gray
+            Color.black
             TextFieldViewComponent(text: .constant("21341"))
                 .padding()
+                .preferredColorScheme(.dark)
         }
     }
 }

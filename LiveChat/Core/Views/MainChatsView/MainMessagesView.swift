@@ -10,37 +10,45 @@ import SwiftUI
 struct MainMessagesView: View {
     @StateObject private var mainMessVM = MainMessagesViewModel()
     @EnvironmentObject var userVM: UserManagerViewModel
+    @EnvironmentObject var loginVM: LoginViewModel
     @State private var showSideBarView: Bool = false
     @State private var showNewMessageView: Bool = false
     @State private var showChatView: Bool = false
     @State private var searchText: String = ""
     @FocusState var isSearchFocused: Bool
     var body: some View {
-
-            VStack(spacing: 0) {
-                searchChatTextFieldView
-                List{
-                    chatRowSection
-                }
-                .listStyle(.plain)
-                
-                //userSettingNavigationLink
-                chatViewNavigationLink
-            }
-            .foregroundColor(.fontPrimary)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    navigationTile
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    newMessageBtn
-                }
-            }
-            .sheet(isPresented: $showNewMessageView) {
-                CreateNewMessageView(showChatView: $showChatView, selectedChatUserId: $mainMessVM.selectedChatUserId)
-            }
         
+        VStack(spacing: 0) {
+            searchChatTextFieldView
+            List{
+                chatRowSection
+            }
+            .listStyle(.plain)
+            
+            //userSettingNavigationLink
+            chatViewNavigationLink
+        }
+        .foregroundColor(.fontPrimary)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                navigationTile
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                newMessageBtn
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    loginVM.signOut()
+                } label: {
+                    Text("Out")
+                }
+                
+            }
+        }
+        .sheet(isPresented: $showNewMessageView) {
+            CreateNewMessageView(showChatView: $showChatView, selectedChatUserId: $mainMessVM.selectedChatUserId)
+        }
     }
 }
 
@@ -49,6 +57,7 @@ struct MainMessagesView_Previews: PreviewProvider {
         NavigationView {
             MainMessagesView()
                 .environmentObject(UserManagerViewModel())
+                .environmentObject(LoginViewModel())
         }
 //            .preferredColorScheme(.dark)
     }
