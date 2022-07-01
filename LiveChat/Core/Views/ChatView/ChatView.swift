@@ -41,6 +41,7 @@ struct ChatView: View {
                 EmptyView()
             }
         }
+        .background(Color.bgWhite)
         .onAppear{
             chatVM.currentUser = userVM.currentUser
         }
@@ -52,18 +53,22 @@ struct ChatView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .principal) {
+            ToolbarItem(placement: .navigationBarLeading) {
                 if !showDetailsImageView{
-                    Text(chatVM.selectedChatUser?.firstName ?? "")
-                        .font(.system(size: 17, weight: .semibold))
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                if !showDetailsImageView{
-                    Button {
-                        showProfileView.toggle()
-                    } label: {
-                        UserAvatarViewComponent(pathImage: chatVM.selectedChatUser?.profileImageUrl)
+                    HStack(spacing: 8) {
+                        Button {
+                            showProfileView.toggle()
+                        } label: {
+                            UserAvatarViewComponent(pathImage: chatVM.selectedChatUser?.profileImageUrl)
+                        }
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(chatVM.selectedChatUser?.firstName ?? "Tester")
+                                .font(.urbMedium(size: 16))
+                                .foregroundColor(.fontPrimary)
+                            Text("Online")
+                                .font(.urbMedium(size: 14))
+                                .foregroundColor(.secondaryGreen)
+                        }
                     }
                 }
             }
@@ -72,13 +77,15 @@ struct ChatView: View {
     }
 }
 
-//struct ChatView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigationView {
-//            ChatView(selectedChatUser: User(uid: "1", email: "test@test.com", profileImageUrl: "", name: "tester"), currentUser: User(uid: "2", email: "test2@test.com", profileImageUrl: "", name: "tester2"))
-//        }
-//    }
-//}
+struct ChatView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            ChatView(selectedChatUserId: "Ez2lDmtzekf0I4KV8yrcqPLR5jp1")
+                .environmentObject(UserManagerViewModel())
+                .preferredColorScheme(.light)
+        }
+    }
+}
 
 
 extension ChatView{
@@ -94,12 +101,7 @@ extension ChatView{
                         .font(.title3)
                         .foregroundColor(.blue)
                 }
-                Group{
-                    TextField("Enter your message...", text: $chatVM.chatText)
-                }
-                .padding(10)
-                .background(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                TextFieldViewComponent(text: $chatVM.chatText, promt: "Enter your message...", font: .urbMedium(size: 16), height: 45, cornerRadius: 10)
                 Button {
                     chatVM.sendMessage()
                 } label: {
@@ -109,10 +111,11 @@ extension ChatView{
                 }
                 .disabled(!chatVM.isActiveSendButton)
             }
+            .padding(.horizontal, 15)
         }
-        .padding(.horizontal, 15)
         .padding(.bottom, 10)
-        .background(Color.gray.opacity(0.3))
+        .background(Color.secondaryBlueTheme)
+        .shadow(color: .secondaryFontGrey.opacity(0.1), radius: 6, x: 0, y: -2)
     }
     
     private var imageViewForChatBottomBar: some View{
@@ -179,7 +182,12 @@ extension ChatView{
     }
     
     private func textMessageView(_ message: Message, isRecevied: Bool) -> some View{
-            HStack(alignment: .bottom, spacing: 5) {
+        let recivedColorBg: LinearGradient = LinearGradient(colors: [.accentBlue], startPoint: .trailing, endPoint: .leading)
+        let messBg: LinearGradient = LinearGradient(colors: [.secondaryBlue], startPoint: .trailing, endPoint: .leading)
+        var bgColor: LinearGradient{
+            isRecevied ? recivedColorBg : messBg
+        }
+          return  HStack(alignment: .bottom, spacing: 5) {
                 Text(message.text)
                     .font(.system(size: 14, weight: .regular))
                     .foregroundColor(isRecevied ? .white : .black)
@@ -188,7 +196,7 @@ extension ChatView{
                     .foregroundColor(isRecevied ? .white : .black)
             }
             .padding(EdgeInsets.init(top: 10, leading: 15, bottom: 10, trailing: 15))
-            .background(isRecevied ? Color.blue : Color.cyan.opacity(0.5))
+            .background(bgColor)
     }
     
     private func textAndImageMessageView(_ message: Message, isRecevied: Bool, imageURL: URL) -> some View{

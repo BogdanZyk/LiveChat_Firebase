@@ -29,6 +29,7 @@ struct MainMessagesView: View {
             chatViewNavigationLink
         }
         .foregroundColor(.fontPrimary)
+        .background(Color.bgWhite)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -59,7 +60,7 @@ struct MainMessagesView_Previews: PreviewProvider {
                 .environmentObject(UserManagerViewModel())
                 .environmentObject(LoginViewModel())
         }
-//            .preferredColorScheme(.dark)
+            .preferredColorScheme(.dark)
     }
 }
 
@@ -82,7 +83,7 @@ extension MainMessagesView{
     
     private var searchChatTextFieldView: some View{
         HStack {
-            TextFieldViewComponent(text: $searchText, promt: "Search your chat here", font: .urbRegular(size: 18), height: 50, cornerRadius: 20)
+            TextFieldViewComponent(text: $searchText, promt: "Search your chat here", font: .urbRegular(size: 18), height: 45, cornerRadius: 10)
                 .focused($isSearchFocused)
             if isSearchFocused{
                 Button {
@@ -98,7 +99,7 @@ extension MainMessagesView{
             }
         }
         .animation(.easeInOut, value: isSearchFocused)
-        .padding(.top, 10)
+        .padding(.vertical, 10)
         .padding(.horizontal, 15)
     }
     
@@ -111,6 +112,7 @@ extension MainMessagesView{
                 EmptyView()
             }
         }
+        .navigationTitle("")
     }
     private var navActionButton: some View{
         HStack(spacing: 0){
@@ -144,16 +146,22 @@ extension MainMessagesView{
                         Spacer()
                         Text(resentMessage.message.messageTime)
                             .font(.urbMedium(size: 12))
-                            .foregroundColor(.gray)
                     }
-                    Text(resentMessage.message.text)
-                        .font(.urbMedium(size: 14))
-                        .foregroundColor(.gray)
+                    HStack {
+                        Text(resentMessage.message.text)
+                            .font(.urbMedium(size: 14))
+                        Spacer()
+                        if !resentMessage.message.viewed && resentMessage.uid == userVM.currentUser?.uid{
+                            Circle()
+                                .fill(Color.accentBlue)
+                                .frame(width: 10, height: 10)
+                        }
+                    }
                 }
                 .lineLimit(1)
             }
             .padding(.vertical, 4)
-            
+            .foregroundColor(.secondaryFontGrey)
        }
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button("Delete Chat", role: .destructive) {
@@ -164,14 +172,13 @@ extension MainMessagesView{
     
     private var chatRowSection: some View{
         Group {
-            Text("Recent")
+            Text("Messages")
                 .font(.urbMedium(size: 18))
             ForEach(mainMessVM.recentMessages){ resentMessage in
                 chatRowView(resentMessage)
             }
         }
-        .listRowSeparator(.hidden)
+        .listRowBackground(Color.bgWhite)
+        .listRowSeparator(.hidden, edges: .top)
     }
-    
-
 }

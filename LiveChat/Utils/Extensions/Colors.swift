@@ -17,4 +17,6 @@ extension Color {
     static let secondaryFontGrey = Color("secondaryFontGrey")
     static let secondaryGreen = Color("secondaryGreen")
     static let destructivRed = Color("destructivRed")
+    static let secondaryBlue = Color("secondaryBlue")
+    static let secondaryBlueTheme = Color("secondatyBlueTheme")
 }

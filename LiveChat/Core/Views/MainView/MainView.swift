@@ -49,6 +49,7 @@ struct MainView: View {
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MainView()
+            .preferredColorScheme(.dark)
     }
 }
 
@@ -74,14 +75,13 @@ extension MainView{
             Spacer()
         }
         .padding(.top, 10)
-        //.padding(.bottom, 3)
-        .background(Color.white)
-        .shadow(color: .black.opacity(0.08), radius: 20, x: 0, y: -2)
+        .background(Color.bgWhite)
+        .shadow(color: .secondaryFontGrey.opacity(0.15), radius: 6, x: 0, y: -5)
     }
     
     private func tabItem(_ tab: Tab) -> some View{
-        VStack(spacing: 8){
-            CustomIconView(imageName: tab.rawValue, width: 25, height: 25, color: tab == selectionTab ? .accentBlue : .gray, opacity: 1)
+        VStack(spacing: 6){
+            CustomIconView(imageName: tab.rawValue, width: 20, height: 20, color: tab == selectionTab ? .accentBlue : .gray, opacity: 1)
             Text(tab.rawValue)
                 .font(.urbMedium(size: 16))
                 .foregroundColor(tab == selectionTab ? .accentBlue : .gray)
