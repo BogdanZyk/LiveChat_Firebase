@@ -19,4 +19,7 @@ extension Color {
     static let destructivRed = Color("destructivRed")
     static let secondaryBlue = Color("secondaryBlue")
     static let secondaryBlueTheme = Color("secondatyBlueTheme")
+    static let messBlueDark = Color("messBlueDark")
+    static let messBlueLight = Color("messBlueLight")
+    static let whiteOrGray = Color("whiteOrGray")
 }

@@ -137,15 +137,17 @@ extension MainMessagesView{
             mainMessVM.selectedChatUserId = resentMessage.uid
             showChatView.toggle()
         } label: {
-            HStack(spacing: 20){
+            HStack(alignment: .top, spacing: 20){
                 UserAvatarViewComponent(pathImage: resentMessage.profileImageUrl, size: .init(width: 55, height: 55))
                 VStack(alignment: .leading, spacing: 6){
                     HStack {
                         Text(resentMessage.name)
                             .font(.urbMedium(size: 16))
+                            .foregroundColor(.fontPrimary)
                         Spacer()
                         Text(resentMessage.message.messageTime)
                             .font(.urbMedium(size: 12))
+                          
                     }
                     HStack {
                         Text(resentMessage.message.text)
@@ -157,10 +159,12 @@ extension MainMessagesView{
                                 .frame(width: 10, height: 10)
                         }
                     }
+                    Divider().padding(.top, 10)
                 }
                 .lineLimit(1)
+                .padding(.top, 5)
             }
-            .padding(.vertical, 4)
+            //.padding(.vertical, 4)
             .foregroundColor(.secondaryFontGrey)
        }
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -179,6 +183,6 @@ extension MainMessagesView{
             }
         }
         .listRowBackground(Color.bgWhite)
-        .listRowSeparator(.hidden, edges: .top)
+        .listRowSeparator(.hidden)
     }
 }

@@ -17,31 +17,31 @@ struct MainView: View {
         VStack(spacing: 0){
             TabView(selection: $selectionTab) {
                 NavigationView {
-                    VStack(spacing: 0){
-                        ContactsView()
-                        tabBarView
-                    }
+                    ContactsView()
+                        .safeAreaInset(edge: .bottom){
+                            tabBarView
+                        }
                 }
                 .tag(Tab.Contacts)
                 
                 NavigationView {
-                    VStack(spacing: 0) {
-                        MainMessagesView()
-                            .environmentObject(userVM)
-                        tabBarView
-                    }
+                    MainMessagesView()
+                        .environmentObject(userVM)
+                        .safeAreaInset(edge: .bottom){
+                            tabBarView
+                        }
+                    
                 }
                 .tag(Tab.Chats)
                 
                 NavigationView {
-                    VStack(spacing: 0) {
-                        SettingsView()
-                        tabBarView
-                    }
+                    SettingsView()
+                        .safeAreaInset(edge: .bottom){
+                            tabBarView
+                        }
                 }
                 .tag(Tab.Settings)
             }
-            
         }
     }
 }
@@ -65,22 +65,25 @@ enum Tab: String, CaseIterable {
 extension MainView{
     
     private var tabBarView: some View{
-        HStack(spacing: 0){
-            Spacer()
-            tabItem(Tab.Contacts)
-            Spacer()
-            tabItem(Tab.Chats)
-            Spacer()
-            tabItem(Tab.Settings)
-            Spacer()
+        VStack(spacing: 0) {
+            Divider()
+            HStack(spacing: 0){
+                Spacer()
+                tabItem(Tab.Contacts)
+                Spacer()
+                tabItem(Tab.Chats)
+                Spacer()
+                tabItem(Tab.Settings)
+                Spacer()
+            }
+            .padding(.top, 10)
         }
-        .padding(.top, 10)
         .background(Color.bgWhite)
-        .shadow(color: .secondaryFontGrey.opacity(0.15), radius: 6, x: 0, y: -5)
     }
     
     private func tabItem(_ tab: Tab) -> some View{
         VStack(spacing: 6){
+   
             CustomIconView(imageName: tab.rawValue, width: 20, height: 20, color: tab == selectionTab ? .accentBlue : .gray, opacity: 1)
             Text(tab.rawValue)
                 .font(.urbMedium(size: 16))
