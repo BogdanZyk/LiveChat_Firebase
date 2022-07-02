@@ -15,9 +15,12 @@ struct UserAvatarViewComponent: View {
             if let image = pathImage, let imageUrl = URL(string: image){
                 ImageView(imageUrl: imageUrl)
             }else{
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .foregroundColor(.secondary)
+                ZStack{
+                    Color.appGrey
+                    Image("avatarDefault")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                }
             }
         }
         .frame(width: size.width, height: size.height)

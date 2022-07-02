@@ -57,23 +57,10 @@ struct ChatView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                if !showDetailsImageView{
-                    HStack(spacing: 8) {
-                        Button {
-                            showProfileView.toggle()
-                        } label: {
-                            UserAvatarViewComponent(pathImage: chatVM.selectedChatUser?.profileImageUrl)
-                        }
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(chatVM.selectedChatUser?.firstName ?? "Tester")
-                                .font(.urbMedium(size: 16))
-                                .foregroundColor(.fontPrimary)
-                            Text("Online")
-                                .font(.urbMedium(size: 14))
-                                .foregroundColor(.secondaryGreen)
-                        }
-                    }
-                }
+                navigationAvatarSection
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                navigationActionButton
             }
         }
         .navigationBarBackButtonHidden(showDetailsImageView)
@@ -85,13 +72,43 @@ struct ChatView_Previews: PreviewProvider {
         NavigationView {
             ChatView(selectedChatUserId: "Ez2lDmtzekf0I4KV8yrcqPLR5jp1")
                 .environmentObject(UserManagerViewModel())
-                .preferredColorScheme(.dark)
+                .preferredColorScheme(.light)
         }
     }
 }
 
 
 extension ChatView{
+    
+    
+    private var navigationAvatarSection: some View {
+        Group{
+            if !showDetailsImageView{
+                HStack(spacing: 8) {
+                    Button {
+                        showProfileView.toggle()
+                    } label: {
+                        UserAvatarViewComponent(pathImage: chatVM.selectedChatUser?.profileImageUrl)
+                    }
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(chatVM.selectedChatUser?.firstName ?? "Tester")
+                            .font(.urbMedium(size: 16))
+                            .foregroundColor(.fontPrimary)
+                        Text("Online")
+                            .font(.urbMedium(size: 14))
+                            .foregroundColor(.secondaryGreen)
+                    }
+                }
+            }
+        }
+    }
+    private var navigationActionButton: some View{
+        HStack(spacing: 15){
+            CustomIconView(imageName: "video", width: 25, height: 25, color: .accentBlue, opacity: 1)
+            CustomIconView(imageName: "Contacts", width: 20, height: 20, color: .accentBlue, opacity: 1)
+        }
+    }
+    
     private var chatBottomBar: some View{
         VStack(alignment: .leading, spacing: 20) {
             Divider()
@@ -100,9 +117,7 @@ extension ChatView{
                 Button {
                     showImagePicker.toggle()
                 } label: {
-                    Image(systemName: "photo.on.rectangle.angled")
-                        .font(.title3)
-                        .foregroundColor(.blue)
+                    CustomIconView(imageName: "pin", width: 22, height: 22, color: .secondaryFontGrey, opacity: 1)
                 }
                 TextFieldViewComponent(text: $chatVM.chatText, promt: "Enter your message...", font: .urbMedium(size: 16), height: 45, cornerRadius: 10)
                 Button {
@@ -110,7 +125,7 @@ extension ChatView{
                 } label: {
                     Image(systemName: "paperplane.fill")
                         .font(.title3)
-                        .foregroundColor(chatVM.isActiveSendButton ? .blue : .secondary)
+                        .foregroundColor(chatVM.isActiveSendButton ? .accentBlue : .secondaryFontGrey)
                 }
                 .disabled(!chatVM.isActiveSendButton)
             }

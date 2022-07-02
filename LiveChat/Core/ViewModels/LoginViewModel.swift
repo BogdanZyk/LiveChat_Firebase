@@ -10,6 +10,7 @@ import FirebaseFirestore
 import FirebaseStorage
 
 class LoginViewModel: ObservableObject{
+    
     @Published var showModalView: Bool = false
     @Published var email: String = ""
     @Published var repeatPass: String = ""
@@ -22,6 +23,9 @@ class LoginViewModel: ObservableObject{
     @Published var showAlert: Bool = false
     @Published var isloggedUser: Bool = false
     @Published var showLoader: Bool = false
+    
+    
+    @Published var isDarkMode: Bool = false
     
     init(){
         self.checkLoginStatus()

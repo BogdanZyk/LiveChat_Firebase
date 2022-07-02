@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct StartView: View {
+    @Environment(\.colorScheme) var colorScheme
     @StateObject private var loginVM = LoginViewModel()
     @State private var isActive: Bool = false
     var body: some View {
@@ -22,9 +23,13 @@ struct StartView: View {
                 LaunchScrenView(isActive: $isActive)
             }
         }
+        .preferredColorScheme(loginVM.isDarkMode ? .dark : .light)
         .environmentObject(loginVM)
         .sheet(isPresented: $loginVM.showModalView) {
             Text("Modal")
+        }
+        .onAppear {
+            loginVM.isDarkMode = colorScheme == .dark
         }
     }
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
+    @EnvironmentObject var loginVM: LoginViewModel
     @StateObject private var userVM = UserManagerViewModel()
     @State private var selectionTab: Tab = .Chats
     init(){
@@ -36,6 +37,8 @@ struct MainView: View {
                 
                 NavigationView {
                     SettingsView()
+                        .environmentObject(loginVM)
+                        .environmentObject(userVM)
                         .safeAreaInset(edge: .bottom){
                             tabBarView
                         }

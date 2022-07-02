@@ -41,6 +41,8 @@
 		5AAED8CC2855EA30006CC9C8 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 5AAED8CB2855EA30006CC9C8 /* FirebaseFirestore */; };
 		5AAED8CE2855EA30006CC9C8 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 5AAED8CD2855EA30006CC9C8 /* FirebaseFirestoreSwift */; };
 		5AAED8D02855EA30006CC9C8 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 5AAED8CF2855EA30006CC9C8 /* FirebaseStorage */; };
+		5ABB62C92870D65700782B4A /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB62C82870D65700782B4A /* Image.swift */; };
+		5ABB62CC2870E41900782B4A /* TextConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB62CB2870E41900782B4A /* TextConstants.swift */; };
 		5AE740A028469AD00001893B /* LiveChatApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE7409F28469AD00001893B /* LiveChatApp.swift */; };
 		5AE740A228469AD00001893B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE740A128469AD00001893B /* LoginView.swift */; };
 		5AE740A428469AD20001893B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5AE740A328469AD20001893B /* Assets.xcassets */; };
@@ -92,6 +94,8 @@
 		5A838B7D28565242000B0603 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		5A904964286B9BBC000D86F0 /* MainOnbordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainOnbordingView.swift; sourceTree = "<group>"; };
 		5A904967286BA143000D86F0 /* CustomButtomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtomView.swift; sourceTree = "<group>"; };
+		5ABB62C82870D65700782B4A /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		5ABB62CB2870E41900782B4A /* TextConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextConstants.swift; sourceTree = "<group>"; };
 		5AE7409C28469AD00001893B /* LiveChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiveChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AE7409F28469AD00001893B /* LiveChatApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveChatApp.swift; sourceTree = "<group>"; };
 		5AE740A128469AD00001893B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -140,6 +144,7 @@
 			children = (
 				5A5EEA9D28665F6F00623785 /* Colors.swift */,
 				5A5EEAB12866755000623785 /* View.swift */,
+				5ABB62C82870D65700782B4A /* Image.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -197,6 +202,7 @@
 		5A6ACEE8284BA0A000C9B49C /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				5ABB62CA2870E3F600782B4A /* Constants */,
 				5A5EEAA328666AC000623785 /* Fonts */,
 				5A5EEA9C28665F6000623785 /* Extensions */,
 				5A6ACEE9284BA0AC00C9B49C /* Helpers.swift */,
@@ -250,6 +256,14 @@
 			path = ButtonView;
 			sourceTree = "<group>";
 		};
+		5ABB62CA2870E3F600782B4A /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				5ABB62CB2870E41900782B4A /* TextConstants.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
 		5AE7409328469AD00001893B = {
 			isa = PBXGroup;
 			children = (
@@ -293,18 +307,18 @@
 		5AE740B42846A74F0001893B /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5A5EEAA1286663FB00623785 /* LaunchScrenView.swift */,
+				5A6ACEF4284BDA8100C9B49C /* StartView.swift */,
 				5AE9D096286CCA52000DC47A /* SignUp */,
 				5A904963286B9B99000D86F0 /* OnBoardView */,
 				5A5EEAB62866762B00623785 /* Contacts */,
 				5A5EEAB3286675A200623785 /* Settings */,
 				5A5EEAAE28666DD500623785 /* MainView */,
-				5A5EEAA1286663FB00623785 /* LaunchScrenView.swift */,
 				5A838B7F2856524C000B0603 /* UserProfile */,
 				5AFA5FA6284C258D0072B57E /* ChatView */,
 				5AFA5FA1284C01120072B57E /* CreateNewMessageView */,
 				5AFA5FA0284C01000072B57E /* MainChatsView */,
 				5AFA5F9F284C00F90072B57E /* Login */,
-				5A6ACEF4284BDA8100C9B49C /* StartView.swift */,
 				5A64F1EC28608A2300E5FAF8 /* VoiceView.swift */,
 			);
 			path = Views;
@@ -504,12 +518,14 @@
 				5A5EEAB5286675AD00623785 /* SettingsView.swift in Sources */,
 				5A6ACEE3284B8AB100C9B49C /* MainMessagesView.swift in Sources */,
 				5AFA5FAB284C266A0072B57E /* ReversedScrollView.swift in Sources */,
+				5ABB62C92870D65700782B4A /* Image.swift in Sources */,
 				5AE740A228469AD00001893B /* LoginView.swift in Sources */,
 				5A904968286BA143000D86F0 /* CustomButtomView.swift in Sources */,
 				5A6ACEF5284BDA8100C9B49C /* StartView.swift in Sources */,
 				5A5EEAB028666DE500623785 /* MainView.swift in Sources */,
 				5A64F1EF2860D0ED00E5FAF8 /* PlayerViewModel.swift in Sources */,
 				5A838B7E28565242000B0603 /* UserProfileView.swift in Sources */,
+				5ABB62CC2870E41900782B4A /* TextConstants.swift in Sources */,
 				5A5EEAB82866763D00623785 /* ContactsView.swift in Sources */,
 				5A558579285F792A00C59A32 /* VoiceViewModel.swift in Sources */,
 				5A5EEABB2866816D00623785 /* TextField.swift in Sources */,

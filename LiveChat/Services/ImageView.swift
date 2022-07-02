@@ -9,13 +9,14 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct ImageView: View {
+    var contentMode: ContentMode = .fill
     let imageUrl: URL
     var body: some View {
         WebImage(url: imageUrl)
-            .resizable()
             .placeholder{
                 Color.gray
             }
+            .centerCropped()
     }
 }
 
