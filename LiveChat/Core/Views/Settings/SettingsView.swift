@@ -10,10 +10,8 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject var loginVM: LoginViewModel
     @EnvironmentObject var userVM: UserManagerViewModel
-    init(){
-        UIScrollView.appearance().bounces = false
-    }
     @State private var isOnDarkMode: Bool = false
+    @State private var showEditProfileVIew: Bool = false
     var body: some View {
         VStack(spacing: 0){
             ScrollView(.vertical, showsIndicators: false) {
@@ -36,6 +34,9 @@ struct SettingsView: View {
                     }
                 }
             }
+        }
+        .fullScreenCover(isPresented: $showEditProfileVIew){
+            ChangeProfileInfoView(userVM: userVM)
         }
         .toolbar(content: {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -68,23 +69,28 @@ extension SettingsView{
         Button {
             
         } label: {
-            CustomIconView(imageName: "share", width: 25, height: 25, color: .white, opacity: 1)
+            CustomIconView(imageName: "share", width: 25, height: 25, color: .accentBlue, opacity: 1)
         }
     }
     private var navigationEditProfileBtn: some View{
         Button {
-            
+            showEditProfileVIew.toggle()
         } label: {
-            CustomIconView(imageName: "pen", width: 20, height: 20, color: .white, opacity: 1)
+            CustomIconView(imageName: "pen", width: 20, height: 20, color: .accentBlue, opacity: 1)
         }
     }
     
     private var bannerImage: some View{
-        ImageView(contentMode: .fill, imageUrl: URL(string: "https://home-cooks.s3.eu-west-2.amazonaws.com/menuHeaderImage/a6ce380c-b8d2-487f-8f36-496195883613")!)
-            .frame(height: 160)
+        ZStack{
+            if let banner = userVM.currentUser?.userBannerUrl, let url = URL(string: banner){
+                ImageView(contentMode: .fill, imageUrl: url)
+            }
+            LinearGradient(colors: [.black.opacity(0.5) , .clear], startPoint: .bottom, endPoint: .top)
+        }
+        .frame(height: 160)
     }
     private var userAvatarSection: some View{
-            UserAvatarViewComponent(pathImage: "", size: .init(width: 150, height: 150))
+            UserAvatarViewComponent(pathImage: userVM.currentUser?.profileImageUrl, size: .init(width: 150, height: 150))
             .overlay(Circle().stroke(Color.bgWhite, lineWidth: 8))
             .padding(.top, 80)
     }
@@ -92,27 +98,34 @@ extension SettingsView{
     private var userInfo: some View{
         Group {
             Group{
-                Text("Salvador Martinez")
+                Text("\(userVM.currentUser?.firstName ?? "") \(userVM.currentUser?.lastName ?? "")")
                     .font(.urbRegular(size: 20))
+                
                 HStack {
-                    Label {
-                        Text("@martinslvdr")
-                    } icon: {
-                        Image("star")
+                    if let userName = userVM.currentUser?.userName, !userName.isEmpty{
+                        Label {
+                            Text("@\(userName)")
+                        } icon: {
+                            Image("star")
+                        }
                     }
-                    Label {
-                        Text("+15852095357")
-                    } icon: {
-                        Image("star")
+                    if let phone = userVM.currentUser?.phone, !phone.isEmpty{
+                        Label {
+                            Text("+\(phone)")
+                        } icon: {
+                            Image("star")
+                        }
                     }
                 }
                 .font(.urbRegular(size: 16))
             }
             .foregroundColor(.fontPrimary)
-            Text("Hello! This is my work number, please text me from 11 p .m. to 6 p.m. I’m availliable during this time!")
-                .multilineTextAlignment(.center)
-                .font(.urbRegular(size: 15))
-                .frame(width: 300)
+            if let bio = userVM.currentUser?.bio{
+                Text(bio)
+                    .multilineTextAlignment(.center)
+                    .font(.urbRegular(size: 15))
+                    .frame(width: 300)
+            }
         }
         .foregroundColor(.secondaryFontGrey)
     }
@@ -122,7 +135,7 @@ extension SettingsView{
             Label {
                 Text("Dark Mode")
             } icon: {
-                Image("sun")
+                CustomIconView(imageName: "sun", width: 15, height: 15, color: .fontPrimary, opacity: 1)
             }
         }
         .tint(.accentBlue)
@@ -157,7 +170,7 @@ extension SettingsView{
     }
     private var logOutButtonView: some View{
         Button {
-           
+            loginVM.signOut()
         } label: {
             VStack{
                 Text("Log Out")

@@ -9,12 +9,12 @@ import Foundation
 
 struct User: Codable{
     let uid: String
-    let email: String
-    let profileImageUrl: String?
-    let userName: String
-    let firstName: String
-    let lastName: String
-    let bio: String
-    let userBannerUrl: String
-    let phone: String
+    var email: String
+    var profileImageUrl: String?
+    var userName: String
+    var firstName: String
+    var lastName: String
+    var bio: String
+    var userBannerUrl: String
+    var phone: String
 }

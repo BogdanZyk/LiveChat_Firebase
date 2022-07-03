@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5A2AC93D2852A5FA008B7741 /* RecentMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2AC93C2852A5FA008B7741 /* RecentMessages.swift */; };
+		5A360890287204010044E59F /* ChangeProfileInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A36088F287204000044E59F /* ChangeProfileInfoView.swift */; };
+		5A360892287206220044E59F /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A360891287206220044E59F /* EditProfileViewModel.swift */; };
 		5A558579285F792A00C59A32 /* VoiceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A558578285F792A00C59A32 /* VoiceViewModel.swift */; };
 		5A55857C285F8C4500C59A32 /* ChatBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A55857B285F8C4500C59A32 /* ChatBubble.swift */; };
 		5A5EEA9E28665F6F00623785 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5EEA9D28665F6F00623785 /* Colors.swift */; };
@@ -63,6 +65,8 @@
 
 /* Begin PBXFileReference section */
 		5A2AC93C2852A5FA008B7741 /* RecentMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentMessages.swift; sourceTree = "<group>"; };
+		5A36088F287204000044E59F /* ChangeProfileInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeProfileInfoView.swift; sourceTree = "<group>"; };
+		5A360891287206220044E59F /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
 		5A558578285F792A00C59A32 /* VoiceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceViewModel.swift; sourceTree = "<group>"; };
 		5A55857B285F8C4500C59A32 /* ChatBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubble.swift; sourceTree = "<group>"; };
 		5A5EEA9D28665F6F00623785 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
@@ -179,6 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				5A5EEAB4286675AD00623785 /* SettingsView.swift */,
+				5A36088F287204000044E59F /* ChangeProfileInfoView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -335,6 +340,7 @@
 				5A558578285F792A00C59A32 /* VoiceViewModel.swift */,
 				5A64F1EE2860D0ED00E5FAF8 /* PlayerViewModel.swift */,
 				5A75B3732868D0DC0037AD74 /* TestDataViewModel.swift */,
+				5A360891287206220044E59F /* EditProfileViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -535,6 +541,7 @@
 				5A64F1ED28608A2300E5FAF8 /* VoiceView.swift in Sources */,
 				5A838B7C28563AD5000B0603 /* UserManagerViewModel.swift in Sources */,
 				5A5EEAA828666B6000623785 /* Fonts.swift in Sources */,
+				5A360890287204010044E59F /* ChangeProfileInfoView.swift in Sources */,
 				5A6ACEF3284BB68300C9B49C /* ImageView.swift in Sources */,
 				5A5EEA9E28665F6F00623785 /* Colors.swift in Sources */,
 				5A5EEAB22866755000623785 /* View.swift in Sources */,
@@ -552,6 +559,7 @@
 				5A75B3742868D0DC0037AD74 /* TestDataViewModel.swift in Sources */,
 				5AE9D095286CCA17000DC47A /* OnboardView.swift in Sources */,
 				5A6ACEE5284B972300C9B49C /* SideBarView.swift in Sources */,
+				5A360892287206220044E59F /* EditProfileViewModel.swift in Sources */,
 				5AE740BB2846A7A20001893B /* LoginViewModel.swift in Sources */,
 				5A6ACEE7284B9ED400C9B49C /* MainMessagesViewModel.swift in Sources */,
 			);

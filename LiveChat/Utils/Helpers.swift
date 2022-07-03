@@ -36,6 +36,29 @@ final class Helpers{
         return imageData
     }
     
+    static func uploadImageToFirestore(uiImage: UIImage?, imagePath: String, path: String, completion: @escaping (URL?, Error?) -> Void){
+        guard let uiImage = uiImage else {
+            completion(nil, nil)
+            return
+        }
+        let ref = FirebaseManager.shared.storage.reference().child(path).child(imagePath)
+        guard let imageData = preparingImageforUpload(uiImage) else {return}
+        ref.putData(imageData, metadata: nil) {(metadate, error) in
+            if let error = error{
+                completion(nil, error)
+            }
+            
+//            self.handleError(error, title: "Error upload image:")
+            ref.downloadURL {(url, error) in
+                if let error = error{
+                    completion(nil, error)
+                    return
+                }
+                //self.handleError(error, title: "Error load image url")
+                completion(url, nil)
+            }
+        }
+    }
     
 
 }

@@ -101,14 +101,17 @@ class LoginViewModel: ObservableObject{
     public func persistUserInfoToStorage(){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         self.showLoader = true
-        let ref = FirebaseManager.shared.storage.reference(withPath: uid)
-        uploadUserAvatarImage(ref: ref) { url in
-            self.storeUserInformation(url){
-                self.showLoader = false
-                withAnimation {
-                    self.checkLoginStatus()
+        Helpers.uploadImageToFirestore(uiImage: imageData?.image, imagePath: imageData?.imageName ?? UUID().uuidString, path: "avatar_\(uid)") {[weak self] url, error in
+            self?.storeUserInformation(url){[weak self] in
+                self?.showLoader = false
+                if let error = error {
+                    self?.handleError(error, title: "Failde upload avatar")
+                    return
                 }
-                self.resetUserInfo()
+                withAnimation {
+                    self?.checkLoginStatus()
+                }
+                self?.resetUserInfo()
             }
         }
     }
@@ -133,15 +136,22 @@ class LoginViewModel: ObservableObject{
     
 
     
-    private func uploadUserAvatarImage(ref: StorageReference, completion: @escaping (URL?) -> Void){
-        guard let imageData = Helpers.preparingImageforUpload(imageData?.image) else {return completion(nil)}
-        ref.putData(imageData, metadata: nil) { [weak self] (metadate, error) in
-            guard let self = self else {return completion(nil)}
-            self.handleError(error, title: "Error upload image:")
-            ref.downloadURL {[weak self]  (url, error) in
-                guard let self = self else {return completion(nil)}
-                self.handleError(error, title: "Error load image url")
-                completion(url)
+    private func uploadImageToFirestore(uiImage: UIImage?, imagePath: String, path: String, completion: @escaping (URL?, Error?) -> Void){
+        let ref = FirebaseManager.shared.storage.reference().child(path).child(imagePath)
+        guard let imageData = Helpers.preparingImageforUpload(uiImage) else {return completion(nil, nil)}
+        ref.putData(imageData, metadata: nil) {(metadate, error) in
+            if let error = error{
+                completion(nil, error)
+            }
+            
+//            self.handleError(error, title: "Error upload image:")
+            ref.downloadURL {(url, error) in
+                if let error = error{
+                    completion(nil, error)
+                    return
+                }
+                //self.handleError(error, title: "Error load image url")
+                completion(url, nil)
             }
         }
     }
