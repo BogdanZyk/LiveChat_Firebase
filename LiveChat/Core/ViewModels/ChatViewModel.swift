@@ -22,7 +22,8 @@ class ChatViewModel: ObservableObject{
     @Published var chatMessages = [Message]()
     @Published var imageData: UIImageData?
     @Published var selectedChatMessages: Message?
-    @Published var isLodaing: Bool = false
+    @Published var isLoading: Bool = false
+    @Published var preloadMessageImage: MessageWithImage?
     
     var selectedChatUserId: String?
     var uploadTask: StorageUploadTask?
@@ -47,8 +48,25 @@ class ChatViewModel: ObservableObject{
         firestoreListener?.remove()
     }
     
+//    var isLodaingImage: Bool {
+//        uploadTask?.snapshot.status == .progress
+//    }
+    
+    //MARK: - View all message
+    
+    public func viewLastMessage(){
+        guard let fromId = FirebaseManager.shared.auth.currentUser?.uid, let toId = selectedChatUserId else {return}
+        let document = FirebaseManager.shared.firestore
+            .collection(FBConstant.userChats)
+            .document(fromId)
+            .collection(FBConstant.chats)
+            .document(toId)
+        document.updateData(["message.viewed": true])
+    }
+    
+    
     //MARK: - Fetch chat user
-     func fetchUser(){
+    private func fetchUser(){
         guard let uid = selectedChatUserId else {return}
         FirebaseManager.shared.firestore.collection("users")
             .document(uid).getDocument { [weak self] (snapshot, error) in
@@ -104,9 +122,10 @@ class ChatViewModel: ObservableObject{
     
     //MARK: - Delete Image for upload
     public func deleteImage(){
-        if isLodaing{
+        if isLoading{
             uploadTask?.cancel()
         }
+        preloadMessageImage = nil
         imageData = nil
     }
     
@@ -119,7 +138,15 @@ class ChatViewModel: ObservableObject{
         let messageText = chatText
         let image = imageData
         resetInputs()
+        createPrelodaImageMessage(image: image?.image, text: messageText)
         createMessage(fromId: fromId, toId: toId, messageText: messageText, imageData: image)
+    }
+    private func createPrelodaImageMessage(image: UIImage?, text: String){
+        guard let image = image else {return}
+        preloadMessageImage = MessageWithImage(text: text, uiImage: image)
+        DispatchQueue.main.async {
+            self.messageReceive += 1
+        }
     }
     
     private func resetInputs(){
@@ -205,12 +232,18 @@ class ChatViewModel: ObservableObject{
             }
         }
         uploadTask?.observe(.progress) { snapshot in
-            self.isLodaing = snapshot.status == .progress
+            self.isLoading = snapshot.status == .progress
         }
-       
     }
     
  
+}
+
+
+
+struct MessageWithImage {
+    let text: String
+    let uiImage: UIImage
 }
 
 

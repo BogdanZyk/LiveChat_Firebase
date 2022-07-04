@@ -130,8 +130,7 @@ extension ChangeProfileInfoView{
                     RoundedRectangle(cornerRadius: 15)
                         .fill(Color.accentBlue.opacity(0.5))
                         .frame(width: 60, height: 60)
-                    ProgressView()
-                        .scaleEffect(1.5)
+                    ProgressLoader()
                 }
                 .animation(.easeInOut, value: editVM.showLoaderView)
             }

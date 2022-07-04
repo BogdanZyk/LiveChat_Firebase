@@ -23,7 +23,6 @@ class UserManagerViewModel: ObservableObject{
         FirebaseManager.shared.firestore.collection("users")
             .document(uid)
             .addSnapshotListener { documentSnapshot, error in
-                
                 if let error = error{
                     self.handleError(error, title: "Failed to fetch current user")
                 }
@@ -34,14 +33,7 @@ class UserManagerViewModel: ObservableObject{
                 }
             }
     }
-//            .document(uid).getDocument { [weak self] (snapshot, error) in
-//                guard let self = self else {return}
-//                self.handleError(error, title: "Failed to fetch current user")
-//                guard let userData = Helpers.decodeUserData(snapshot) else {return}
-//                self.currentUser = userData
-//            }
-//    }
-//
+    
     private func handleError(_ error: Error?, title: String){
         Helpers.handleError(error, title: title, errorMessage: &errorMessage, showAlert: &showAlert)
     }

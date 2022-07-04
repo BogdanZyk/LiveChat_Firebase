@@ -10,6 +10,7 @@
 		5A2AC93D2852A5FA008B7741 /* RecentMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2AC93C2852A5FA008B7741 /* RecentMessages.swift */; };
 		5A360890287204010044E59F /* ChangeProfileInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A36088F287204000044E59F /* ChangeProfileInfoView.swift */; };
 		5A360892287206220044E59F /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A360891287206220044E59F /* EditProfileViewModel.swift */; };
+		5A41209828733E8C008EE1A9 /* ProgressLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A41209728733E8C008EE1A9 /* ProgressLoader.swift */; };
 		5A558579285F792A00C59A32 /* VoiceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A558578285F792A00C59A32 /* VoiceViewModel.swift */; };
 		5A55857C285F8C4500C59A32 /* ChatBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A55857B285F8C4500C59A32 /* ChatBubble.swift */; };
 		5A5EEA9E28665F6F00623785 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5EEA9D28665F6F00623785 /* Colors.swift */; };
@@ -67,6 +68,7 @@
 		5A2AC93C2852A5FA008B7741 /* RecentMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentMessages.swift; sourceTree = "<group>"; };
 		5A36088F287204000044E59F /* ChangeProfileInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeProfileInfoView.swift; sourceTree = "<group>"; };
 		5A360891287206220044E59F /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
+		5A41209728733E8C008EE1A9 /* ProgressLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressLoader.swift; sourceTree = "<group>"; };
 		5A558578285F792A00C59A32 /* VoiceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceViewModel.swift; sourceTree = "<group>"; };
 		5A55857B285F8C4500C59A32 /* ChatBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubble.swift; sourceTree = "<group>"; };
 		5A5EEA9D28665F6F00623785 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				5A55857A285F8C3600C59A32 /* ChatBubble */,
 				5AFA5FA9284C26560072B57E /* ReversedScrollView */,
 				5A6ACEF7284BF0A100C9B49C /* AvatarView */,
+				5A41209728733E8C008EE1A9 /* ProgressLoader.swift */,
 			);
 			path = ViewComponents;
 			sourceTree = "<group>";
@@ -532,6 +535,7 @@
 				5A64F1EF2860D0ED00E5FAF8 /* PlayerViewModel.swift in Sources */,
 				5A838B7E28565242000B0603 /* UserProfileView.swift in Sources */,
 				5ABB62CC2870E41900782B4A /* TextConstants.swift in Sources */,
+				5A41209828733E8C008EE1A9 /* ProgressLoader.swift in Sources */,
 				5A5EEAB82866763D00623785 /* ContactsView.swift in Sources */,
 				5A558579285F792A00C59A32 /* VoiceViewModel.swift in Sources */,
 				5A5EEABB2866816D00623785 /* TextField.swift in Sources */,
@@ -701,6 +705,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -733,6 +738,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (

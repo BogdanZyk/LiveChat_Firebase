@@ -140,31 +140,40 @@ extension MainMessagesView{
             HStack(alignment: .top, spacing: 20){
                 UserAvatarViewComponent(pathImage: resentMessage.profileImageUrl, size: .init(width: 55, height: 55))
                 VStack(alignment: .leading, spacing: 6){
-                    HStack {
-                        Text(resentMessage.name)
-                            .font(.urbMedium(size: 16))
-                            .foregroundColor(.fontPrimary)
-                        Spacer()
-                        Text(resentMessage.message.messageTime)
-                            .font(.urbMedium(size: 12))
-                          
-                    }
-                    HStack {
-                        Text(resentMessage.message.text)
-                            .font(.urbMedium(size: 14))
-                        Spacer()
-                        if !resentMessage.message.viewed && resentMessage.uid == userVM.currentUser?.uid{
-                            Circle()
-                                .fill(Color.accentBlue)
-                                .frame(width: 10, height: 10)
+                    Group{
+                        HStack {
+                            Text(resentMessage.name)
+                                .font(.urbMedium(size: 16))
+                                .foregroundColor(.fontPrimary)
+                            Spacer()
+                            Text(resentMessage.message.messageTime)
+                                .font(.urbMedium(size: 12))
+                        }
+                        HStack {
+                            if !resentMessage.message.text.isEmpty{
+                                Text(resentMessage.message.text)
+                                    .font(.urbMedium(size: 14))
+                            }
+                            if let imageURL = URL(string: resentMessage.message.image.imageURL){
+                                ImageView(imageUrl: imageURL)
+                                    .frame(width: 20, height: 20)
+                                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                                Text("Photo")
+                            }
+                            Spacer()
+                            if !resentMessage.message.viewed && resentMessage.message.fromId != userVM.currentUser?.uid{
+                                Circle()
+                                    .fill(Color.accentBlue)
+                                    .frame(width: 10, height: 10)
+                            }
                         }
                     }
+                    .padding(.trailing, 20)
                     Divider().padding(.top, 10)
                 }
                 .lineLimit(1)
                 .padding(.top, 5)
             }
-            //.padding(.vertical, 4)
             .foregroundColor(.secondaryFontGrey)
        }
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -182,6 +191,7 @@ extension MainMessagesView{
                 chatRowView(resentMessage)
             }
         }
+        .listRowInsets(EdgeInsets.init(top: 10, leading: 20, bottom: 0, trailing: 0))
         .listRowBackground(Color.bgWhite)
         .listRowSeparator(.hidden)
     }

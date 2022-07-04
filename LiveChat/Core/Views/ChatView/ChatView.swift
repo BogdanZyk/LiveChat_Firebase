@@ -143,14 +143,14 @@ extension ChatView{
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFill()
-                    if chatVM.isLodaing{
+                    if chatVM.isLoading{
                         Color.black.opacity(0.2)
-                        ProgressView().tint(.white)
-                            .scaleEffect(1.5)
+                        ProgressLoader()
                     }
                 }
                 .frame(width: 100, height: 100)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding(.leading, 20)
             }
         }
         .overlay(alignment: .topTrailing) {
@@ -178,9 +178,47 @@ extension ChatView{
             ForEach(chatVM.chatMessages){
                 messageRowView(messages: $0)
             }
+            .padding(.vertical, 4)
+            preloaderImageMessageView
         }
         .padding(.horizontal, 10)
     }
+    
+    private var preloaderImageMessageView: some View{
+        Group{
+            if let preloadMessage = chatVM.preloadMessageImage, chatVM.isLoading{
+                ChatBubble(direction: .right) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Image(uiImage: preloadMessage.uiImage)
+                            .centerCropped()
+                            .frame(width: 220, height: 200)
+                        if !preloadMessage.text.isEmpty{
+                            Text(preloadMessage.text)
+                                .font(.urbRegular(size: 14))
+                                .foregroundColor(.white)
+                                .padding(EdgeInsets.init(top: 10, leading: 15, bottom: 10, trailing: 15))
+                        }
+                    }
+                    .overlay{
+                        Color.secondaryFontGrey.opacity(0.6)
+                        ProgressLoader(color: .white, scaleEffect: 2)
+                        Button {
+                            withAnimation {
+                                chatVM.deleteImage()
+                            }
+                        } label: {
+                            Image(systemName: "xmark")
+                                .font(.callout)
+                                .foregroundColor(.white)
+                        }
+                    }
+                    .background(.blue)
+                }
+                .padding(.vertical, 4)
+            }
+        }
+    }
+    
     private func messageRowView(messages: Message) -> some View{
         ChatBubble(direction: messages.fromId == currentUserId ? .right : .left) {
             let isRecevied = messages.fromId == currentUserId
@@ -197,6 +235,11 @@ extension ChatView{
             }
         }
         .padding(.vertical, 4)
+        .onAppear{
+            if messages.id == chatVM.chatMessages.last?.id{
+                chatVM.viewLastMessage()
+            }
+        }
     }
     
     private func textMessageView(_ message: Message, isRecevied: Bool) -> some View{
@@ -218,17 +261,22 @@ extension ChatView{
     }
     
     private func textAndImageMessageView(_ message: Message, isRecevied: Bool, imageURL: URL) -> some View{
-        VStack(alignment: .leading, spacing: 0){
+        let recivedColorBg: LinearGradient = LinearGradient(colors: [.messBlueLight, .messBlueDark], startPoint: .topTrailing, endPoint: .bottomLeading)
+        let messBg: LinearGradient = LinearGradient(colors: [.secondaryBlue], startPoint: .trailing, endPoint: .leading)
+        var bgColor: LinearGradient{
+            isRecevied ? recivedColorBg : messBg
+        }
+        return VStack(alignment: .leading, spacing: 0){
             ImageView(imageUrl: imageURL)
                 .frame(width: 220, height: 200)
             if !message.text.isEmpty{
                 Text(message.text)
-                    .font(.system(size: 14, weight: .regular))
-                    .foregroundColor(isRecevied ? .white : .black)
+                    .font(.urbRegular(size: 14))
+                    .foregroundColor(isRecevied ? .white : .whiteOrGray)
                     .padding(EdgeInsets.init(top: 10, leading: 15, bottom: 10, trailing: 15))
             }
         }
-        .background(isRecevied ? Color.blue : Color.cyan.opacity(0.5))
+        .background(bgColor)
     }
     private var detailsImageView: some View{
         Group{

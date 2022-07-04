@@ -71,9 +71,7 @@ extension LoginView{
     private var loginActionButtons: some View{
         VStack(alignment: .leading, spacing: 20) {
             if loginVM.showLoader{
-                ProgressView()
-                    .tint(.accentBlue)
-                    .scaleEffect(1.5)
+                ProgressLoader()
                     .frame(height: 50)
                     .hCenter()
             }else{
