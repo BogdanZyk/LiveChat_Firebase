@@ -32,30 +32,30 @@ MVVM Architecture, IOS 15.0, device: iphone.
 
 ## Screenshots 📷
 
-### Dark theme
-
-<div align="center">
- 
- <img src="Screenshots/logIn_dark.png" height="350" alt="Screenshot"/>
-<img src="Screenshots/signUp1_dark.png" height="350" alt="Screenshot"/>
-<img src="Screenshots/dialog_dark.png" height="350" alt="Screenshot"/>
-<img src="Screenshots/chats_dark.png" height="350" alt="Screenshot"/>
-<img src="Screenshots/chats_dark.png" height="350" alt="Screenshot"/>
-</div>
-
-
-
 ### Light theme
 
 <div align="center">
+ <img src="Screenshots/launchscreen.png" height="350" alt="Screenshot"/>
  <img src="Screenshots/Onboard.png" height="350" alt="Screenshot"/>
 <img src="Screenshots/logIn_light.png" height="350" alt="Screenshot"/>
 <img src="Screenshots/signUp1_light.png" height="350" alt="Screenshot"/>
 <img src="Screenshots/signUp2_light.png" height="350" alt="Screenshot"/>
+<img src="Screenshots/contacts_light.png" height="350" alt="Screenshot"/>
 <img src="Screenshots/dialog_light.png" height="350" alt="Screenshot"/>
 
 </div>
 
+### Dark theme
+
+<div align="center">
+
+  <img src="Screenshots/onBoard_dark.png" height="350" alt="Screenshot"/>
+ <img src="Screenshots/logIn_dark.png" height="350" alt="Screenshot"/>
+<img src="Screenshots/signUp1_dark.png" height="350" alt="Screenshot"/>
+<img src="Screenshots/dialog_dark.png" height="350" alt="Screenshot"/>
+<img src="Screenshots/chats_dark.png" height="350" alt="Screenshot"/>
+<img src="Screenshots/profile_dark.png" height="350" alt="Screenshot"/>
+</div>
 
 
 ## Author
