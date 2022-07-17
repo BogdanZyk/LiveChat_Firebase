@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class CreateNewMessageViewModel: ObservableObject{
+class ContactsViewModel: ObservableObject{
     
     @Published var users = [User]()
     @Published var errorMessage = ""
@@ -35,7 +35,7 @@ class CreateNewMessageViewModel: ObservableObject{
     
     
     
-    private func fetchAllUsers(){
+    public func fetchAllUsers(){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         FirebaseManager.shared.firestore
             .collection("users").whereField("uid", isNotEqualTo: uid)

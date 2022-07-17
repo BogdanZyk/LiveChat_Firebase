@@ -8,23 +8,14 @@
 import SwiftUI
 
 struct CreateNewMessageView: View {
-    @Environment(\.self) var env
+    @Environment(\.dismiss) var dismiss
     @Binding var showChatView: Bool
     @Binding var selectedChatUserId: String?
-    @StateObject private var createMessVM = CreateNewMessageViewModel()
+    @EnvironmentObject private var contactVM: ContactsViewModel
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading, spacing: 0){
-                List{
-                    ForEach(createMessVM.users, id: \.uid) { user in
-                        userRowView(user)
-                    }
-                }
-                .listStyle(.plain)
-            }
-            .searchable(text: $createMessVM.searchText, prompt: "Search users", suggestions: {
-                searchResultSection
-            })
+                ContactViewComponent(showChatView: $showChatView, selectedChatUserId: $selectedChatUserId, isDismissAction: true, contactVM: contactVM)
+            
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -38,11 +29,13 @@ struct CreateNewMessageView: View {
     }
 }
 
-//struct CreateNewMessageView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CreateNewMessageView(showChatView: .constant(true), selectedChatUser: .constant(User(uid: "1", email: "", profileImageUrl: "", name: "")))
-//    }
-//}
+struct CreateNewMessageView_Previews: PreviewProvider {
+    static var previews: some View {
+        CreateNewMessageView(showChatView: .constant(true), selectedChatUserId: .constant("2we"))
+            .environmentObject(ContactsViewModel())
+            .preferredColorScheme(.dark)
+    }
+}
 
 
 extension CreateNewMessageView{
@@ -50,43 +43,16 @@ extension CreateNewMessageView{
     //MARK: -  Toolbar section
     
     private var navTitle: some View{
-        Text("Send message")
-            .font(.headline).bold()
+        Text("New Message")
+            .font(.urbMedium(size: 18))
+            .foregroundColor(.fontPrimary)
     }
     private var closeButton: some View{
         Button {
-            env.dismiss()
+            dismiss()
         } label: {
             Text("Cancel")
         }
-    }
-    private func userRowView(_ user: User) -> some View{
-        Button {
-            selectedChatUserId = user.uid
-            showChatView.toggle()
-            env.dismiss()
-        } label: {
-            HStack{
-                UserAvatarViewComponent(pathImage: user.profileImageUrl, size: CGSize.init(width: 50, height: 50))
-                Text(user.firstName)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.primary)
-            }
-            .padding(.vertical, 5)
-        }
-    }
-    
-    private var searchResultSection: some View{
-        Group{
-            if !createMessVM.searchText.isEmpty && createMessVM.searchResult.isEmpty{
-                Text("No search user")
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding()
-            }else{
-                ForEach(createMessVM.searchResult, id: \.uid) { user in
-                    userRowView(user)
-                }
-            }
-        }
+        .font(.urbMedium(size: 15))
     }
 }

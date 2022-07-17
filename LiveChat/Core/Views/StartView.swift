@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct StartView: View {
-    @Environment(\.colorScheme) var colorScheme
     @StateObject private var loginVM = LoginViewModel()
     @State private var isActive: Bool = false
+    @StateObject private var colorSchemeService = ColorSchemeService()
     var body: some View {
         Group{
             if isActive{
                 if loginVM.isloggedUser{
                     MainView()
+                        .environmentObject(colorSchemeService)
                 }else{
                     MainOnbordingView()
                 }
@@ -23,14 +24,8 @@ struct StartView: View {
                 LaunchScrenView(isActive: $isActive)
             }
         }
-        .preferredColorScheme(loginVM.isDarkMode ? .dark : .light)
+        .preferredColorScheme(colorSchemeService.isDarkMode ? .dark : .light)
         .environmentObject(loginVM)
-        .sheet(isPresented: $loginVM.showModalView) {
-            Text("Modal")
-        }
-        .onAppear {
-            loginVM.isDarkMode = colorScheme == .dark
-        }
     }
 }
 

@@ -9,7 +9,9 @@ import SwiftUI
 
 struct MainView: View {
     @EnvironmentObject var loginVM: LoginViewModel
+    @EnvironmentObject var colorSchemeService: ColorSchemeService
     @StateObject private var userVM = UserManagerViewModel()
+    @StateObject private var contactVM = ContactsViewModel()
     @State private var selectionTab: Tab = .Chats
     init(){
         UITabBar.appearance().isHidden = true
@@ -19,6 +21,7 @@ struct MainView: View {
             TabView(selection: $selectionTab) {
                 NavigationView {
                     ContactsView()
+                        .environmentObject(contactVM)
                         .safeAreaInset(edge: .bottom){
                             tabBarView
                         }
@@ -27,6 +30,7 @@ struct MainView: View {
                 
                 NavigationView {
                     MainMessagesView()
+                        .environmentObject(contactVM)
                         .environmentObject(userVM)
                         .safeAreaInset(edge: .bottom){
                             tabBarView
@@ -37,6 +41,7 @@ struct MainView: View {
                 
                 NavigationView {
                     SettingsView()
+                        .environmentObject(colorSchemeService)
                         .environmentObject(loginVM)
                         .environmentObject(userVM)
                         .safeAreaInset(edge: .bottom){
@@ -52,6 +57,7 @@ struct MainView: View {
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MainView()
+            .environmentObject(LoginViewModel())
             .preferredColorScheme(.dark)
     }
 }

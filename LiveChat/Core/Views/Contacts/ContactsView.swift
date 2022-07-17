@@ -8,12 +8,10 @@
 import SwiftUI
 
 struct ContactsView: View {
+    @EnvironmentObject var contactVM: ContactsViewModel
     var body: some View {
-  
-            VStack(spacing: 0){
-                Text("Contacts")
-            }
-            .allFrame()
+
+        ContactViewComponent(showChatView: .constant(true), selectedChatUserId: .constant("1"), isDismissAction: false, contactVM: contactVM)
         
         
     }
@@ -22,5 +20,6 @@ struct ContactsView: View {
 struct ContactsView_Previews: PreviewProvider {
     static var previews: some View {
         ContactsView()
+            .environmentObject(ContactsViewModel())
     }
 }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A1E87272884326C009CB2FC /* ContactViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1E87262884326C009CB2FC /* ContactViewComponent.swift */; };
+		5A1E872A28843645009CB2FC /* ColorSchemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1E872928843645009CB2FC /* ColorSchemeService.swift */; };
 		5A2AC93D2852A5FA008B7741 /* RecentMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2AC93C2852A5FA008B7741 /* RecentMessages.swift */; };
 		5A360890287204010044E59F /* ChangeProfileInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A36088F287204000044E59F /* ChangeProfileInfoView.swift */; };
 		5A360892287206220044E59F /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A360891287206220044E59F /* EditProfileViewModel.swift */; };
@@ -57,7 +59,7 @@
 		5AE9D095286CCA17000DC47A /* OnboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE9D094286CCA17000DC47A /* OnboardView.swift */; };
 		5AE9D099286CD91B000DC47A /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE9D098286CD91B000DC47A /* SignUpView.swift */; };
 		5AFA5F9E284BF9200072B57E /* CreateNewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5F9D284BF9200072B57E /* CreateNewMessageView.swift */; };
-		5AFA5FA3284C022F0072B57E /* CreateNewMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FA2284C022F0072B57E /* CreateNewMessageViewModel.swift */; };
+		5AFA5FA3284C022F0072B57E /* ContactsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FA2284C022F0072B57E /* ContactsViewModel.swift */; };
 		5AFA5FA5284C1D1D0072B57E /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FA4284C1D1D0072B57E /* ChatViewModel.swift */; };
 		5AFA5FA8284C259A0072B57E /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FA7284C259A0072B57E /* ChatView.swift */; };
 		5AFA5FAB284C266A0072B57E /* ReversedScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFA5FAA284C266A0072B57E /* ReversedScrollView.swift */; };
@@ -65,6 +67,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5A1E87262884326C009CB2FC /* ContactViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactViewComponent.swift; sourceTree = "<group>"; };
+		5A1E872928843645009CB2FC /* ColorSchemeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSchemeService.swift; sourceTree = "<group>"; };
 		5A2AC93C2852A5FA008B7741 /* RecentMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentMessages.swift; sourceTree = "<group>"; };
 		5A36088F287204000044E59F /* ChangeProfileInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeProfileInfoView.swift; sourceTree = "<group>"; };
 		5A360891287206220044E59F /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
@@ -114,7 +118,7 @@
 		5AE9D094286CCA17000DC47A /* OnboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardView.swift; sourceTree = "<group>"; };
 		5AE9D098286CD91B000DC47A /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		5AFA5F9D284BF9200072B57E /* CreateNewMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewMessageView.swift; sourceTree = "<group>"; };
-		5AFA5FA2284C022F0072B57E /* CreateNewMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewMessageViewModel.swift; sourceTree = "<group>"; };
+		5AFA5FA2284C022F0072B57E /* ContactsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewModel.swift; sourceTree = "<group>"; };
 		5AFA5FA4284C1D1D0072B57E /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		5AFA5FA7284C259A0072B57E /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		5AFA5FAA284C266A0072B57E /* ReversedScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversedScrollView.swift; sourceTree = "<group>"; };
@@ -137,6 +141,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5A1E8728288434C5009CB2FC /* ContactViewComponent */ = {
+			isa = PBXGroup;
+			children = (
+				5A1E87262884326C009CB2FC /* ContactViewComponent.swift */,
+			);
+			path = ContactViewComponent;
+			sourceTree = "<group>";
+		};
 		5A55857A285F8C3600C59A32 /* ChatBubble */ = {
 			isa = PBXGroup;
 			children = (
@@ -220,6 +232,7 @@
 		5A6ACEF6284BF09900C9B49C /* ViewComponents */ = {
 			isa = PBXGroup;
 			children = (
+				5A1E8728288434C5009CB2FC /* ContactViewComponent */,
 				5A904966286BA12F000D86F0 /* ButtonView */,
 				5A5EEAB92866815F00623785 /* TextField */,
 				5A5EEAAB28666D9300623785 /* IconsView */,
@@ -338,7 +351,7 @@
 				5A838B7B28563AD4000B0603 /* UserManagerViewModel.swift */,
 				5AE740BA2846A7A20001893B /* LoginViewModel.swift */,
 				5A6ACEE6284B9ED400C9B49C /* MainMessagesViewModel.swift */,
-				5AFA5FA2284C022F0072B57E /* CreateNewMessageViewModel.swift */,
+				5AFA5FA2284C022F0072B57E /* ContactsViewModel.swift */,
 				5AFA5FA4284C1D1D0072B57E /* ChatViewModel.swift */,
 				5A558578285F792A00C59A32 /* VoiceViewModel.swift */,
 				5A64F1EE2860D0ED00E5FAF8 /* PlayerViewModel.swift */,
@@ -365,6 +378,7 @@
 				5AE740BC2846AD2C0001893B /* FirebaseManager.swift */,
 				5AE740BE2846AF2F0001893B /* ImagePicker.swift */,
 				5A6ACEF2284BB68300C9B49C /* ImageView.swift */,
+				5A1E872928843645009CB2FC /* ColorSchemeService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -523,7 +537,7 @@
 				5A55857C285F8C4500C59A32 /* ChatBubble.swift in Sources */,
 				5A2AC93D2852A5FA008B7741 /* RecentMessages.swift in Sources */,
 				5AE740BD2846AD2C0001893B /* FirebaseManager.swift in Sources */,
-				5AFA5FA3284C022F0072B57E /* CreateNewMessageViewModel.swift in Sources */,
+				5AFA5FA3284C022F0072B57E /* ContactsViewModel.swift in Sources */,
 				5A5EEAB5286675AD00623785 /* SettingsView.swift in Sources */,
 				5A6ACEE3284B8AB100C9B49C /* MainMessagesView.swift in Sources */,
 				5AFA5FAB284C266A0072B57E /* ReversedScrollView.swift in Sources */,
@@ -543,6 +557,8 @@
 				5AE740BF2846AF2F0001893B /* ImagePicker.swift in Sources */,
 				5AE9D099286CD91B000DC47A /* SignUpView.swift in Sources */,
 				5A64F1ED28608A2300E5FAF8 /* VoiceView.swift in Sources */,
+				5A1E87272884326C009CB2FC /* ContactViewComponent.swift in Sources */,
+				5A1E872A28843645009CB2FC /* ColorSchemeService.swift in Sources */,
 				5A838B7C28563AD5000B0603 /* UserManagerViewModel.swift in Sources */,
 				5A5EEAA828666B6000623785 /* Fonts.swift in Sources */,
 				5A360890287204010044E59F /* ChangeProfileInfoView.swift in Sources */,

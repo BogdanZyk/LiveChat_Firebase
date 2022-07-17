@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject var loginVM: LoginViewModel
     @EnvironmentObject var userVM: UserManagerViewModel
-    @State private var isOnDarkMode: Bool = false
+    @EnvironmentObject var colorSchemeService: ColorSchemeService
     @State private var showEditProfileVIew: Bool = false
     var body: some View {
         VStack(spacing: 0){
@@ -35,6 +35,9 @@ struct SettingsView: View {
                 }
             }
         }
+        .onChange(of: colorSchemeService.isDarkMode, perform: { _ in
+            colorSchemeService.saveColorScheme()
+        })
         .fullScreenCover(isPresented: $showEditProfileVIew){
             ChangeProfileInfoView(userVM: userVM)
         }
@@ -55,6 +58,7 @@ struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             SettingsView()
+                .environmentObject(ColorSchemeService())
                 .environmentObject(LoginViewModel())
                 .environmentObject(UserManagerViewModel())
                 .preferredColorScheme(.dark)
@@ -131,7 +135,7 @@ extension SettingsView{
     }
     
     private var themeToggleView: some View{
-        Toggle(isOn: $loginVM.isDarkMode) {
+        Toggle(isOn: $colorSchemeService.isDarkMode) {
             Label {
                 Text("Dark Mode")
             } icon: {

@@ -11,6 +11,7 @@ struct MainMessagesView: View {
     @StateObject private var mainMessVM = MainMessagesViewModel()
     @EnvironmentObject var userVM: UserManagerViewModel
     @EnvironmentObject var loginVM: LoginViewModel
+    @EnvironmentObject var contactVM: ContactsViewModel
     @State private var showSideBarView: Bool = false
     @State private var showNewMessageView: Bool = false
     @State private var showChatView: Bool = false
@@ -24,8 +25,6 @@ struct MainMessagesView: View {
                 chatRowSection
             }
             .listStyle(.plain)
-            
-            //userSettingNavigationLink
             chatViewNavigationLink
         }
         .foregroundColor(.fontPrimary)
@@ -38,17 +37,10 @@ struct MainMessagesView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 newMessageBtn
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    loginVM.signOut()
-                } label: {
-                    Text("Out")
-                }
-                
-            }
         }
         .sheet(isPresented: $showNewMessageView) {
             CreateNewMessageView(showChatView: $showChatView, selectedChatUserId: $mainMessVM.selectedChatUserId)
+                .environmentObject(contactVM)
         }
     }
 }
@@ -59,6 +51,7 @@ struct MainMessagesView_Previews: PreviewProvider {
             MainMessagesView()
                 .environmentObject(UserManagerViewModel())
                 .environmentObject(LoginViewModel())
+                .environmentObject(ContactsViewModel())
         }
             .preferredColorScheme(.dark)
     }

@@ -25,7 +25,7 @@ class LoginViewModel: ObservableObject{
     @Published var showLoader: Bool = false
     
     
-    @Published var isDarkMode: Bool = false
+
     
     init(){
         self.checkLoginStatus()
