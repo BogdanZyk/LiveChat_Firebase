@@ -13,7 +13,6 @@ MVVM Architecture, IOS 15.0, device: iphone.
 - Light and Dark Mode
 
 
-
 ### Real-time chat
 
 <img align="center" src="Screenshots/gif2.gif" height="500">
@@ -64,5 +63,4 @@ MVVM Architecture, IOS 15.0, device: iphone.
 ## License
 
  Copyright 2022 Bogdan Zykov.
-
  Licensed under MIT License: https://opensource.org/licenses/MIT
