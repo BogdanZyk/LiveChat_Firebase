@@ -152,6 +152,7 @@ extension MainMessagesView{
                                     .frame(width: 20, height: 20)
                                     .clipShape(RoundedRectangle(cornerRadius: 5))
                                 Text("Photo")
+                                    .font(.urbMedium(size: 14))
                             }
                             Spacer()
                             if !resentMessage.message.viewed && resentMessage.message.fromId != userVM.currentUser?.uid{
