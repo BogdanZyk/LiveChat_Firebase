@@ -208,8 +208,9 @@ extension ChatView{
                             }
                         } label: {
                             Image(systemName: "xmark")
-                                .font(.callout)
+                                .font(.urbMedium(size: 10))
                                 .foregroundColor(.white)
+                                .padding(20)
                         }
                     }
                     .background(.blue)

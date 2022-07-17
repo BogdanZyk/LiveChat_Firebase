@@ -48,10 +48,6 @@ class ChatViewModel: ObservableObject{
         firestoreListener?.remove()
     }
     
-//    var isLodaingImage: Bool {
-//        uploadTask?.snapshot.status == .progress
-//    }
-    
     //MARK: - View all message
     
     public func viewLastMessage(){
@@ -143,8 +139,8 @@ class ChatViewModel: ObservableObject{
     }
     private func createPrelodaImageMessage(image: UIImage?, text: String){
         guard let image = image else {return}
-        preloadMessageImage = MessageWithImage(text: text, uiImage: image)
         DispatchQueue.main.async {
+            self.preloadMessageImage = MessageWithImage(text: text, uiImage: image)
             self.messageReceive += 1
         }
     }
